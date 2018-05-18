@@ -1,0 +1,409 @@
+<template>
+  <div id="deploy" :style="{transform: `translateY(${pageTranslateY}px)`}">
+    <div class="tc-card">
+      <div class="tc-title">Deploy Contract</div>
+      <div class="select-method">
+        Deploy Contract By:&nbsp;
+        <div>
+          <span :class="{'active': needCompile}" @click="toggleSCMode('source')">Sol Source</span>
+          <span :class="{'active': !needCompile}" @click="toggleSCMode('code')">Code / Interface</span>
+        </div>
+        <span class="resize" @click="resizeTextarea">resize</span>
+      </div>
+      <div class="code-input">
+        <div v-if="needCompile" class="source-box">
+          <p>Solidity Source Code</p>
+          <textarea class="code"
+            :class="{'input-active': needCompile}"
+            :disabled="!needCompile"
+            v-model="sourceCode">
+          </textarea>
+        </div>
+        <div v-if="needCompile" class="compile-button">
+          <div class="loading">
+            <div>
+              <anim-loading :isActive="isCompiling"></anim-loading>
+            </div>
+          </div>
+          <div class="button" @click="queryCompile">
+            <icon-compile :config="{color: '#0d85da'}"></icon-compile>
+            <p>Compile</p>
+          </div>
+          <div class="select-contract">
+            <div v-if="defaultContractName">
+              <selector
+                :defaultSelect="defaultContractName"
+                :options="contractsName"
+                @change="changeCompiledResult">
+              </selector>
+            </div>
+          </div>
+        </div>
+        <div class="code-box">
+          <p>Compiled Code</p>
+          <textarea class="code"
+            :disabled="needCompile"
+            v-model="compiledCode">
+          </textarea>
+          <p>Interface JSON</p>
+          <textarea class="code"
+            :disabled="needCompile"
+            v-model="interfaceJSON">
+          </textarea>
+        </div>
+      </div>
+      <hr>
+      <div class="form-deploy">
+        <set-tx-config
+          :active="compiledCode && interfaceJSON"
+          :computedGas="computedGas"
+          @next="onNext">
+        </set-tx-config>
+      </div>
+      <div class="deploy-confirm">
+        <div class="deploytx-info" v-html="deployTxInfo"></div>
+        <div @click="deploy" :class="{'button-active': waitToDeploy}" class="button-blue">
+          <div>Deploy</div>
+        </div>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+</template>
+
+<script>
+import web3 from '@/api-config/web3'
+import { mapState, mapMutations, mapActions } from 'vuex'
+import api from '@/api-config'
+
+import IconCompile from 'svg-icon/compile'
+import AnimLoading from '@/components/common/gui/Loading'
+import Selector from '@/components/common/function/Selector'
+import SetTxConfig from '@/components/common/function/SetTxConfig'
+
+export default {
+  name: 'Deploy',
+  data () {
+    return {
+      needCompile: true,
+      contracts: {},
+      contractsName: [],
+      defaultContractName: '',
+      sourceCode: '',
+      compiledCode: '',
+      interfaceJSON: '',
+      isCompiling: false,
+      deployConfig: {},
+      computedGas: 0,
+      deployTxInfo: 'Tx info<br>',
+      waitToDeploy: false,
+      pageTranslateY: 0,
+      height: 0
+    }
+  },
+  computed: {
+    ...mapState([
+      'eth'
+    ])
+  },
+  watch: {
+    compiledCode (newValue) {
+      if (!newValue) {
+        return
+      }
+      const contract = new web3.eth.Contract([])
+      contract.deploy({data: '0x' + newValue})
+        .estimateGas()
+        .then(res => {
+          this.computedGas = res
+        }).catch(err => {
+          this.computedGas = ''
+          console.log(err)
+        })
+    }
+  },
+  created () {
+    this.$emit('routerinit', this)
+  },
+  mounted () {
+    this.height = this.$el.getBoundingClientRect().height
+    this.$el.addEventListener('mousewheel', this.onMousewheel)
+    window.addEventListener('resize', this.updateSize)
+  },
+  methods: {
+    ...mapActions([
+      'pushAccountToWallet'
+    ]),
+    ...mapMutations([
+      'toAddAccounts'
+    ]),
+    toggleSCMode (mode) {
+      this.sourceCode = ''
+      this.compiledCode = ''
+      this.interfaceJSON = ''
+      this.contracts = {}
+      this.contractsName = []
+      this.defaultContractName = ''
+      this.needCompile = mode === 'source'
+    },
+    resizeTextarea () {
+      const tas = this.$el.querySelectorAll('textarea')
+      for (let i = 0; i < tas.length; i++) {
+        const ta = tas[i]
+        ta.style.height = ''
+      }
+    },
+    queryCompile () {
+      if (this.isCompiling) {
+        return
+      }
+      this.isCompiling = true
+      this.compiledCode = ''
+      this.interfaceJSON = ''
+      this.contracts = {}
+      this.contractsName = []
+      this.defaultContractName = ''
+      api.compile(this.sourceCode).then(res => {
+        const data = res.data
+        if (data.error) {
+          console.error(data.msg)
+          if (data.details) {
+            for (const key in data.details) {
+              console.error(`  ${data.details[key]}`)
+            }
+          }
+        } else {
+          for (const contractName in data.contracts) {
+            const contract = data.contracts[contractName]
+            const name = contractName.slice(1)
+            this.contracts[name] = {
+              bytecode: contract.bytecode,
+              interface: contract.interface
+            }
+            this.contractsName.push(name)
+          }
+          let lastContractName = this.contractsName[this.contractsName.length - 1]
+          this.defaultContractName = lastContractName
+          this.compiledCode = this.contracts[lastContractName].bytecode
+          this.interfaceJSON = this.contracts[lastContractName].interface
+        }
+      }).catch(err => {
+        console.warn(err)
+      }).then(() => {
+        this.isCompiling = false
+      })
+    },
+    changeCompiledResult (key, isDefaultOption) {
+      const contract = this.contracts[key]
+      if (contract) {
+        this.compiledCode = contract.bytecode
+        this.interfaceJSON = contract.interface
+      }
+    },
+    onNext (options) {
+      this.deployConfig = options
+      web3.eth.getTransactionCount(this.deployConfig.from, 'pending').then(res => {
+        this.deployConfig.nonce = res
+        this.deployTxInfo = 'Tx Info:<br>'
+        this.deployTxInfo += `nonce: ${res} --- OK<br>`
+        this.deployTxInfo += `from: ${this.deployConfig.from} --- OK<br>`
+        const inputGasPrice = Number(web3.utils.fromWei(this.deployConfig.gasPrice, 'Gwei'))
+        let gasPriceStatus = 'OK'
+        if (inputGasPrice < this.eth.MIN_GAS_PRICE_GWEI) {
+          gasPriceStatus = 'Gas price set too low'
+        } else if (inputGasPrice > this.eth.MAX_GAS_PRICE_GWEI) {
+          gasPriceStatus = 'Gas price set too high'
+        }
+        this.deployTxInfo += `Gas Price: ${inputGasPrice} Gwei --- ${gasPriceStatus}<br>`
+        const inputGas = parseInt(this.deployConfig.gas)
+        const suggestGas = parseInt(this.computedGas)
+        const gasSuitable = inputGas >= suggestGas
+        this.deployTxInfo += `Gas Limit: ${inputGas} --- ${gasSuitable ? 'OK' : 'Gas set too low'}<br>`
+        this.deployTxInfo += 'Notice:<br>'
+        const maxGas = inputGasPrice * inputGas
+        this.deployTxInfo += `Maximum gas cost: ${maxGas} Gwei<br>`
+        this.waitToDeploy = true
+      })
+    },
+    deploy () {
+      if (!this.waitToDeploy) {
+        return
+      }
+      let interfaceObj = {}
+      try {
+        interfaceObj = JSON.parse(this.interfaceJSON)
+      } catch (err) {
+        console.error(err)
+        return
+      }
+      const newContract = new web3.eth.Contract(interfaceObj)
+      const options = {
+        data: '0x' + this.compiledCode,
+        arguments: []
+      }
+      const contractDeploy = newContract.deploy(options)
+      const config = {
+        nonce: this.deployConfig.nonce,
+        from: this.deployConfig.from,
+        gas: this.deployConfig.gas,
+        gasPrice: this.deployConfig.gasPrice
+      }
+      try {
+        this.pushAccountToWallet(this.deployConfig.from)
+      } catch (err) {
+        throw err
+      }
+      this.waitToDeploy = false
+      contractDeploy.send(config)
+        .then(console.log)
+        .catch(err => {
+          if (err) {
+            console.error(err.stack)
+          }
+        })
+    }
+  },
+  components: {
+    IconCompile,
+    AnimLoading,
+    Selector,
+    SetTxConfig
+  }
+}
+</script>
+
+<style lang="stylus" scoped>
+#deploy
+  padding 30px
+  &>div
+    margin 10px
+.select-method
+  line-height 40px
+  margin 20px 0
+  div
+    display inline-block
+    vertical-align bottom
+    span
+      padding 0 8px
+      line-height 38px
+      border solid #bbb 1px
+      display block
+      float left
+      cursor pointer
+      color #bbb
+      transition .2s
+      &:first-child
+        border-radius 3px 0 0 3px
+        border-right none
+      &:last-child
+        border-radius 0 3px 3px 0
+        border-left none
+  .resize
+    float right
+    cursor pointer
+  .active
+    background-color #0d85da
+    color #fff
+    border-color #0d85da
+.code-input
+  display flex
+  p
+    line-height 30px
+  textarea
+    width 100%
+    font-size 12px
+    display block
+    word-break break-all
+    transition .4s
+    resize vertical
+  .source-box
+    flex 1 0 200px
+    textarea
+      height 290px
+  .compile-button
+    display flex
+    flex-direction column
+    flex 0 0 100px
+    margin 30px 10px 0
+    // background-color #ffb80033
+    border-radius 3px
+    .loading
+      flex 1 1 50%
+      >div
+        width 40px
+        height 40px
+        margin 0 30px
+    .button
+      flex 0 0 100px
+      width 100px
+      height 100px
+      padding 20px 0
+      box-sizing border-box
+      cursor pointer
+      opacity .6
+      transition opacity .3s
+      &:hover
+        opacity 1
+    svg
+      display block
+      margin auto
+    p
+      line-height 20px
+      color #0d85da
+      text-align center
+    .select-contract
+      flex 1 1 50%
+      font-size 14px
+      line-height 28px
+      >div
+        width 100px
+  .code-box
+    flex 1 0 200px
+    textarea
+      height 130px
+.input-active
+  border-color #0d85da
+  // box-shadow 0 0 6px #0d85da66
+
+.form-deploy
+  margin-top -20px
+  width 50%
+  float left
+
+.deploy-confirm
+  margin-top -20px
+  width 50%
+  padding-left 60px
+  box-sizing border-box
+  float left
+  &>div
+    margin 20px 0
+  .deploytx-info
+    font-size 12px
+    border solid 1px #ddd
+    background-color #eee
+    color #666
+    border-radius 3px
+    height 160px
+    padding 9px
+    box-sizing border-box
+
+@media screen and (max-width: 960px)
+  .code-input
+    flex-direction column
+    .compile-button
+      margin 10px 0
+      flex-direction row
+      .loading
+        >div
+          margin 30px 0
+      .select-contract
+        >div
+          margin 35px 0
+          width 100%
+  .form-deploy
+    width 100%
+  .deploy-confirm
+    width 100%
+    padding-left 0
+</style>
