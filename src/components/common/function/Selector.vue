@@ -55,9 +55,7 @@ export default {
   },
   watch: {
     options () {
-      if (this.options.indexOf(this.selected) === -1) {
-        this.selected = this.defaultSelect
-      }
+      this.selected = this.defaultSelect
     }
   },
   mounted () {

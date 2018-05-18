@@ -11,6 +11,7 @@
     <div id="tc-content">
       <hello v-if="$route.name === null"></hello>
       <div id="tc-user" @mouseleave="closeUserCtrl" :class="{'tc-user-hide': $route.name === null, 'tc-user-ctrl-open': userCtrlisOpen}">
+        <div class="tc-user-net">{{providerName}}</div>
         <div class="tc-user-info" @mouseover="openUserCtrl">
           {{`${accountsCount} Account${accountsCount > 1 ? 's' : ''} in Session`}}
         </div>
@@ -51,6 +52,7 @@ export default {
   },
   computed: {
     ...mapState({
+      providerName: state => state.providerName,
       accountsDialogIsOpen: state => state.accounts.accountsDialogIsOpen
     }),
     ...mapGetters([
@@ -213,6 +215,11 @@ nav
   transition transform .4s
 .tc-user-hide
   transform translateY(-70px)
+.tc-user-net
+  float left
+  padding 0 20px
+  margin-left 10px
+  line-height 60px
 .tc-user-info
   float right
   padding 0 20px
