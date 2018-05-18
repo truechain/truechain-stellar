@@ -155,9 +155,8 @@ export default {
         }
         return prev
       }, [])
-      if (this.interfacesList.indexOf(this.focusInterface) === -1) {
-        this.focusInterface = {}
-      }
+      this.focusInterface = {}
+      this.inputInterfaceData = []
     }
   },
   created () {
