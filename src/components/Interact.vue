@@ -74,12 +74,11 @@
 
 <script>
 import Vue from 'vue'
-import web3 from '@/api-config/web3'
 import { mapState, mapActions } from 'vuex'
 
 import Selector from '@/components/common/function/Selector'
 import SetTxConfig from '@/components/common/function/SetTxConfig'
-import contracts from '@/../static/contracts.json'
+import contracts from 'static/contracts.json'
 
 import InputAddress from '@/components/common/gui/InputAddress'
 import InputUint from '@/components/common/gui/InputUint'
@@ -134,6 +133,7 @@ export default {
   },
   computed: {
     ...mapState([
+      'web3',
       'eth'
     ]),
     waitToSend () {
@@ -201,7 +201,7 @@ export default {
         }
       }
       try {
-        this.focusContract = new web3.eth.Contract(interfacesJSON)
+        this.focusContract = new this.web3.eth.Contract(interfacesJSON)
       } catch (err) {
         this.isErrorInInterfaces = true
         this.interfacesList = []
@@ -235,12 +235,12 @@ export default {
       }
     },
     onNext (options) {
-      web3.eth.getTransactionCount(options.from, 'pending').then(res => {
+      this.web3.eth.getTransactionCount(options.from, 'pending').then(res => {
         this.txConfig = { nonce: res, ...options }
         this.txInfo = 'Tx Info:<br>'
         this.txInfo += `nonce: ${res} --- OK<br>`
         this.txInfo += `from: ${options.from} --- OK<br>`
-        const inputGasPrice = Number(web3.utils.fromWei(options.gasPrice, 'Gwei'))
+        const inputGasPrice = Number(this.web3.utils.fromWei(options.gasPrice, 'Gwei'))
         let gasPriceStatus = 'OK'
         if (inputGasPrice < this.eth.MIN_GAS_PRICE_GWEI) {
           gasPriceStatus = 'Gas price set too low'

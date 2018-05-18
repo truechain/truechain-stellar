@@ -6,9 +6,6 @@ import router from './router'
 import store from './store'
 import './style.styl'
 
-import {CookieStorage} from 'cookie-storage'
-window.cookieStorage = new CookieStorage()
-
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

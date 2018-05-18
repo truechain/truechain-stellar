@@ -21,8 +21,8 @@ const getters = {
 
 // actions
 const actions = {
-  pushAccountToWallet ({ state }, address) {
-    const web3 = window.web3
+  pushAccountToWallet ({ state, rootState }, address) {
+    const web3 = rootState.web3
     try {
       web3.eth.accounts.wallet.add(state.accounts[address.toLocaleLowerCase()])
     } catch (err) {

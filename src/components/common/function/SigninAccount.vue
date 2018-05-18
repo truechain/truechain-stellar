@@ -18,8 +18,7 @@
 </template>
 
 <script>
-import web3 from '@/api-config/web3'
-import { mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'SigninAccount',
@@ -31,6 +30,11 @@ export default {
       accountsCount: 1,
       inputPassword: false
     }
+  },
+  computed: {
+    ...mapState({
+      'accounts': state => state.web3.eth.accounts
+    })
   },
   methods: {
     ...mapMutations([
@@ -67,7 +71,7 @@ export default {
     },
     decrypt () {
       try {
-        const account = web3.eth.accounts.decrypt(this.keystore, this.password)
+        const account = this.accounts.decrypt(this.keystore, this.password)
         this.saveAccounts([account])
         this.$emit('done')
       } catch (err) {
