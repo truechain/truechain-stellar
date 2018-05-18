@@ -1,5 +1,3 @@
-import web3 from '@/api-config/web3'
-
 const state = {
   gasPrice: '20000000000',
   blockNumber: 0,
@@ -14,7 +12,8 @@ const state = {
 
 // actions
 const actions = {
-  updateEthereumInfo ({ commit, state }) {
+  updateEthereumInfo ({ commit, rootState }) {
+    const web3 = rootState.web3
     return Promise.all([
       web3.eth.getGasPrice().then(res => { commit('setGasPrice', res) }),
       web3.eth.getBlockNumber().then(res => { commit('setBlockNumber', res) })

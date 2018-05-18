@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import web3 from '@/api-config/web3'
+import { mapState } from 'vuex'
 
 export default {
   name: 'InputAddress',
@@ -21,9 +21,14 @@ export default {
       isError: false
     }
   },
+  computed: {
+    ...mapState({
+      'isAddress': state => state.web3.utils.isAddress
+    })
+  },
   methods: {
     check () {
-      this.isError = !web3.utils.isAddress(this.value) && this.value
+      this.isError = !this.isAddress(this.value) && this.value
       this.$emit('update:isCorrect', !this.isError && this.value !== '')
       this.$emit('pushData', this.index, this.value)
     }

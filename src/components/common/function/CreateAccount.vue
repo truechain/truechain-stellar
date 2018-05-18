@@ -33,8 +33,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import passwordStrength from 'owasp-password-strength-test'
-import web3 from '@/api-config/web3'
 
 import Help from '@/components/common/function/Help'
 import Notice from '@/components/common/function/Notice'
@@ -63,12 +63,17 @@ export default {
       keystoreNotice
     }
   },
+  computed: {
+    ...mapState({
+      'accounts': state => state.web3.eth.accounts
+    })
+  },
   methods: {
     createAccounts () {
       if (this.passwordIsOk && this.repeatPassword) {
         this.address = ''
         this.exportFinish = false
-        let tempAccounts = web3.eth.accounts.create()
+        let tempAccounts = this.accounts.create()
         const keystore = tempAccounts.encrypt(this.inputPassword)
         const date = new Date()
         this.exportName = `${date.toUTCString().replace(/[\W]+/g, '-')}--${keystore.address}.json`

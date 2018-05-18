@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import web3 from '@/api-config/web3'
 import { mapState, mapGetters, mapMutations } from 'vuex'
 
 import Selector from './Selector'
@@ -53,19 +52,20 @@ export default {
   computed: {
     ...mapState({
       'eth': 'eth',
+      'utils': state => state.web3.utils,
       'latestAccounts': state => state.accounts.latestAccounts
     }),
     ...mapGetters([
       'allAccounts'
     ]),
     gotReady () {
-      return Boolean(web3.utils.isAddress(this.options.from) && this.active)
+      return Boolean(this.utils.isAddress(this.options.from) && this.active)
     },
     gasPriceGwei () {
       let error = false
       let gwei = ''
       try {
-        gwei = web3.utils.fromWei(this.options.gasPrice, 'Gwei')
+        gwei = this.utils.fromWei(this.options.gasPrice, 'Gwei')
       } catch (err) {
         error = true
       }
@@ -74,7 +74,7 @@ export default {
   },
   watch: {
     latestAccounts (newValue) {
-      if (web3.utils.isAddress(newValue)) {
+      if (this.utils.isAddress(newValue)) {
         this.$refs.account.changeSelect(newValue)
         this.options.from = newValue
       }

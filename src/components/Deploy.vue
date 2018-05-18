@@ -72,7 +72,6 @@
 </template>
 
 <script>
-import web3 from '@/api-config/web3'
 import { mapState, mapMutations, mapActions } from 'vuex'
 import api from '@/api-config'
 
@@ -103,6 +102,7 @@ export default {
   },
   computed: {
     ...mapState([
+      'web3',
       'eth'
     ])
   },
@@ -111,7 +111,7 @@ export default {
       if (!newValue) {
         return
       }
-      const contract = new web3.eth.Contract([])
+      const contract = new this.web3.eth.Contract([])
       contract.deploy({data: '0x' + newValue})
         .estimateGas()
         .then(res => {
@@ -202,12 +202,12 @@ export default {
     },
     onNext (options) {
       this.deployConfig = options
-      web3.eth.getTransactionCount(this.deployConfig.from, 'pending').then(res => {
+      this.web3.eth.getTransactionCount(this.deployConfig.from, 'pending').then(res => {
         this.deployConfig.nonce = res
         this.deployTxInfo = 'Tx Info:<br>'
         this.deployTxInfo += `nonce: ${res} --- OK<br>`
         this.deployTxInfo += `from: ${this.deployConfig.from} --- OK<br>`
-        const inputGasPrice = Number(web3.utils.fromWei(this.deployConfig.gasPrice, 'Gwei'))
+        const inputGasPrice = Number(this.web3.utils.fromWei(this.deployConfig.gasPrice, 'Gwei'))
         let gasPriceStatus = 'OK'
         if (inputGasPrice < this.eth.MIN_GAS_PRICE_GWEI) {
           gasPriceStatus = 'Gas price set too low'
@@ -236,7 +236,7 @@ export default {
         console.error(err)
         return
       }
-      const newContract = new web3.eth.Contract(interfaceObj)
+      const newContract = new this.web3.eth.Contract(interfaceObj)
       const options = {
         data: '0x' + this.compiledCode,
         arguments: []
