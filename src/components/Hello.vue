@@ -1,9 +1,9 @@
 <template>
   <div id="hellopage">
     <div class="tc-card tc-hello-card">
-      <h1>Hello!</h1>
-      <p>Welcome to Stellar. Currently it is a <span class="marked">test network</span> based on PBFT protocol and Fabric.</p>
-      <p>Please <span class="blod">do not</span> upload <span class="marked">code or data that contains any private information</span> to the chain.</p>
+      <h1>{{ $t('Hello.title') }}</h1>
+      <p>{{ $t('Hello.welcome') }}</p>
+      <p>Github: <a class="marked" target="_blank" href="https://github.com/truechain/TrueChain-Stellar">https://github.com/truechain/TrueChain-Stellar</a></p>
     </div>
     <signin-account @done="jumpToHomepage" @pass="jumpToHomepage"></signin-account>
     <create-account></create-account>
@@ -65,7 +65,7 @@ export default {
     h1
       font-size 1.6em
       line-height 40px
-      margin 0
+      margin 0 0 20px
     .blod
       font-weight bold
       text-transform uppercase
