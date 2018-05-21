@@ -1,5 +1,9 @@
 {
   "name": "Stellar",
+  "Hello": {
+    "title": "你好!",
+    "welcome": "欢迎使用Stellar"
+  },
   "App": {
     "back": "返回首页",
     "close": "关闭",

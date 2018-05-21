@@ -1,5 +1,9 @@
 {
   "name": "Stellar",
+  "Hello": {
+    "title": "Hello!",
+    "welcome": "Welcome to Stellar"
+  },
   "App": {
     "back": "Back to Home",
     "close": "Close",
