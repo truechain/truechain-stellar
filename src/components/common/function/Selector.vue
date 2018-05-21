@@ -21,7 +21,7 @@
       <li
         class="no-options"
         v-if="!length">
-        No options
+        {{ $t('Selector.noOptions') }}
       </li>
     </ul>
     </div>

@@ -1,10 +1,10 @@
 <template>
   <div id="interact" :style="{transform: `translateY(${pageTranslateY}px)`}">
     <div class="tc-card">
-      <div class="tc-title">Interact Contract</div>
+      <div class="tc-title">{{ $t('Interact.title') }}</div>
       <div class="contarct-info">
         <div class="left-part">
-          <p class="title">Contract</p>
+          <p class="title">{{ $t('Interact.contract') }}</p>
           <selector
             :options="contractNames"
             :defaultOptions="contractNamesDefaultOptions"
@@ -12,7 +12,7 @@
           </selector>
         </div>
         <div class="right-part">
-          <p class="title">Address</p>
+          <p class="title">{{ $t('Interact.address') }}</p>
           <input
             :class="{'input-active': !haveSelectedContract}"
             :disabled="haveSelectedContract"
@@ -20,7 +20,7 @@
             type="text">
         </div>
         <div class="clear"></div>
-        <p class="title">Iterface JSON</p>
+        <p class="title">{{ $t('Interact.api') }}</p>
         <textarea
           :class="{
             'input-active': !haveSelectedContract,
@@ -35,7 +35,7 @@
       <hr>
       <div>
         <div class="left-part interface-data-box">
-          <p class="title">Interface</p>
+          <p class="title">{{ $t('Interact.interface') }}</p>
           <selector
             :options="interfaceNames"
             @change="selectInterface">
@@ -63,7 +63,7 @@
         <div class="left-part">
           <div class="tx-info" v-html="txInfo"></div>
           <div @click="send" :class="{'button-active': waitToSend}" class="button-blue">
-            <div>Send</div>
+            <div>{{ $t('Common.send') }}</div>
           </div>
         </div>
         <div class="clear"></div>
@@ -83,7 +83,6 @@ import contracts from 'static/contracts.json'
 import InputAddress from '@/components/common/gui/InputAddress'
 import InputUint from '@/components/common/gui/InputUint'
 
-const contractNamesDefaultOptions = ['Custom']
 const contractNames = contracts.map(contract => {
   return contract.name
 })
@@ -115,7 +114,6 @@ export default {
         interface: ''
       },
       haveSelectedContract: false,
-      contractNamesDefaultOptions,
       contractNames,
       interfacesList: [],
       interfaceNames: [],
@@ -126,7 +124,7 @@ export default {
       inputArguments: [],
       computedGas: 0,
       txConfig: {},
-      txInfo: 'Tx Info',
+      txInfo: this.$t('Common.txInfo.base'),
       pageTranslateY: 0,
       height: 0
     }
@@ -136,6 +134,9 @@ export default {
       'web3',
       'eth'
     ]),
+    contractNamesDefaultOptions () {
+      return [this.$t('Interact.custom')]
+    },
     waitToSend () {
       let getReady = true
       for (let i = 0; i < this.inputInterfaceData.length; i++) {
@@ -216,7 +217,7 @@ export default {
       this.focusInterface = api || {}
       this.inputInterfaceData = []
       this.inputArguments = []
-      this.txInfo = 'Tx Info'
+      this.txInfo = this.$t('Common.txInfo.base')
       this.$nextTick(() => {
         this.inputInterfaceData = [...api.inputs]
       })
@@ -236,7 +237,7 @@ export default {
     onNext (options) {
       this.web3.eth.getTransactionCount(options.from, 'pending').then(res => {
         this.txConfig = { nonce: res, ...options }
-        this.txInfo = 'Tx Info:<br>'
+        this.txInfo = `${this.$t('Common.txInfo.base')}:<br>`
         this.txInfo += `nonce: ${res} --- OK<br>`
         this.txInfo += `from: ${options.from} --- OK<br>`
         const inputGasPrice = Number(this.web3.utils.fromWei(options.gasPrice, 'Gwei'))

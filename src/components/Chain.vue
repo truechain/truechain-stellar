@@ -2,7 +2,7 @@
   <div id="tc-chain" :style="{transform: `translateY(${pageTranslateY}px)`}">
     <ul class="tc-chain-baseinfo">
       <li v-for="item in baseInfo" :key="baseInfo.indexOf(item)">
-        <div class="tc-card" :style="{backgroundImage: `url(${item.img}`}">
+        <div class="tc-card-small" :style="{backgroundImage: `url(${item.img}`}">
           <p class="tc-chain-baseinfo-name">{{item.name}}</p>
           <p class="tc-chain-baseinfo-value">{{item.value}}</p>
         </div>
@@ -122,6 +122,12 @@ export default {
   background-size: 60px;
   background-repeat: no-repeat;
   background-position: 90% 50%;
+}
+.tc-card-small {
+  border-radius: 3px;
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 2px 4px #0001;
 }
 .tc-chain-boxs li {
   width: 50%;

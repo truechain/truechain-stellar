@@ -1,31 +1,31 @@
 <template>
   <div class="tc-card">
-    <div class="tc-title">Create Account</div>
+    <div class="tc-title">{{ $t('CreateAccount.title') }}</div>
     <div class="tc-form-line">
-      <span>Password</span>
+      <span>{{ $t('Common.password') }}</span>
       <input type="password" v-model="inputPassword" :class="{'green-border': passwordIsOk}" @change="onInputChainge">
       <p class="create-account-msg">{{passwordCheckMsg}}</p>
       <div class="create-account-help">
-        <help :notice="passwordHelp" :width="200"></help>
+        <help :notice="$t('CreateAccount.passwordHelp')" :width="200"></help>
       </div>
     </div>
     <div class="tc-form-line">
-      <span>Repeat</span>
+      <span>{{ $t('Common.repeat') }}</span>
       <input type="password" v-model="repeatPassword" :class="{'green-border': repeatIsOk}" @change="onRepeatChainge">
       <p class="create-account-msg">{{repeatCheckMsg}}</p>
     </div>
     <div class="create-account-submit"
       :class="{'create-account-submit-acitve': repeatIsOk && passwordIsOk}"
-      @click="createAccounts">Submit</div>
+      @click="createAccounts">{{ $t('CreateAccount.submit') }}</div>
     <div class="create-account-download-box">
       <a class="create-account-download"
         :class="{ 'create-account-download-active': exportFinish }"
         :href="exportJSON"
         :download="exportName">
-        <div>{{exportStatus}}</div>
+        <div>{{exportFinish ? $t('CreateAccount.canDownload') : $t('CreateAccount.noKeystore')}}</div>
       </a>
       <div class="create-account-notice">
-        <notice :notice="keystoreNotice" :width="400"></notice>
+        <notice :notice="$t('CreateAccount.keystoreNotice')" :width="400"></notice>
       </div>
     </div>
     <p class="create-account-address">{{address}}</p>
@@ -39,10 +39,10 @@ import passwordStrength from 'owasp-password-strength-test'
 import Help from '@/components/common/function/Help'
 import Notice from '@/components/common/function/Notice'
 
-const passwordHelp = 'Do NOT forget to save this'
-const keystoreNotice = `**Do not lose it!** It cannot be recovered if you lose it.<br>
-**Do not share it!** Your funds will be stolen if you use this file on a malicious/phishing site.<br>
-**Make a backup!** Secure it like the millions of dollars it may one day be worth.`
+// const passwordHelp = 'Do NOT forget to save this'
+// const keystoreNotice = `**Do not lose it!** It cannot be recovered if you lose it.<br>
+// **Do not share it!** Your funds will be stolen if you use this file on a malicious/phishing site.<br>
+// **Make a backup!** Secure it like the millions of dollars it may one day be worth.`
 
 export default {
   name: 'CreateAccount',
@@ -56,11 +56,8 @@ export default {
       repeatCheckMsg: '',
       exportJSON: 'javascript:;',
       exportName: '',
-      exportStatus: 'No Keystore',
       exportFinish: false,
-      address: '',
-      passwordHelp,
-      keystoreNotice
+      address: ''
     }
   },
   computed: {
@@ -79,7 +76,6 @@ export default {
         this.exportName = `${date.toUTCString().replace(/[\W]+/g, '-')}--${keystore.address}.json`
         let blob = new Blob([JSON.stringify(keystore)])
         this.exportJSON = URL.createObjectURL(blob)
-        this.exportStatus = 'Download your keystore'
         this.exportFinish = true
         this.address = `Address 0x${keystore.address}`
         tempAccounts = null

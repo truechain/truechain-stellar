@@ -1,18 +1,18 @@
 <template>
   <div class="tc-card">
-    <div class="tc-title">Sign in with Account</div>
+    <div class="tc-title">{{ $t('SigninAccount.title') }}</div>
       <div class="signin-account-selkey" :class="{'active': inputPassword}">
-        <span>{{buttonText}}</span>
+        <span>{{ $t('SigninAccount.select') }}</span>
         <input type="file" @change="checkKeystore">
       </div>
       <div class="tc-form-line" v-if="inputPassword">
-        <span>Password</span><input type="password" v-model="password">
+        <span>{{ $t('Common.password') }}</span><input type="password" v-model="password">
       </div>
       <div class="signin-account-buttons">
         <div @click="decrypt" :class="{'button-active': password}" class="signin-account-decript">
-          <div>Decrypt</div>
+          <div>{{ $t('Common.decrypt') }}</div>
         </div>
-        <div @click="pass" class="signin-account-pass">Sign in later</div>
+        <div @click="pass" class="signin-account-pass">{{ $t('Common.skip') }}</div>
       </div>
   </div>
 </template>
@@ -25,7 +25,6 @@ export default {
   data () {
     return {
       keystore: null,
-      buttonText: 'Select wallet flie',
       password: '',
       accountsCount: 1,
       inputPassword: false
