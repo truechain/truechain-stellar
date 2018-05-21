@@ -22,10 +22,12 @@
     <div>
       <span class="label">Gas Limit</span>
       <input v-model="options.gas" type="text">
-      <span class="notice">{{computedGas ? `expected ${computedGas}` : 'No suggestions'}}</span>
+      <span class="notice">{{computedGas ? `${$t('SetTxConfig.expected')} ${computedGas}` : $t('SetTxConfig.noSugs')}}</span>
       <div class="clear"></div>
     </div>
-    <div @click="next" :class="{'next-active': gotReady}" class="next-contract">Next</div>
+    <div @click="next" :class="{'next-active': gotReady}" class="next-contract">
+      {{ $t('Common.next') }}
+    </div>
   </div>
 </template>
 
@@ -33,8 +35,6 @@
 import { mapState, mapGetters, mapMutations } from 'vuex'
 
 import Selector from './Selector'
-
-const deployFromDefaultOptions = ['+ add new Account']
 
 export default {
   name: 'SetTxConfig',
@@ -45,8 +45,7 @@ export default {
         from: '',
         gas: '0',
         gasPrice: '20000000000'
-      },
-      deployFromDefaultOptions
+      }
     }
   },
   computed: {
@@ -58,6 +57,9 @@ export default {
     ...mapGetters([
       'allAccounts'
     ]),
+    deployFromDefaultOptions () {
+      return [this.$t('SetTxConfig.newAccount')]
+    },
     gotReady () {
       return Boolean(this.utils.isAddress(this.options.from) && this.active)
     },
@@ -92,7 +94,7 @@ export default {
     ]),
     changeDeployFrom (key, isDefaultOption) {
       if (isDefaultOption) {
-        if (key === deployFromDefaultOptions[0]) {
+        if (key === this.deployFromDefaultOptions[0]) {
           this.toAddAccounts()
         }
       } else {

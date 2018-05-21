@@ -4,26 +4,37 @@
       <img class="tc-nav-logo" src="./assets/logo.png" alt="logo" height="60">
       <transition name="fly-right">
         <div style="position: absolute; width: 100%;" v-if="$route.name !== null">
-          <div class="tc-nav-title" v-for="item in routes" :key="routes.indexOf(item)" :class="{'tc-nav-title-focus': $route.name === item.name}" @click="$router.push(item.path)">{{item.name}}</div>
+          <div
+            class="tc-nav-title"
+            v-for="item in routes"
+            :key="routes.indexOf(item)"
+            :class="{'tc-nav-title-focus': $route.name === item.name}"
+            @click="$router.push(item.path)">
+            {{ $t(`App.router.${item.name}`) }}
+          </div>
         </div>
       </transition>
+      <div class="tc-nav-lang">
+        <span :class="{'focus': languageTag === 'en'}" @click="setLanguage('en')">English</span>
+        <span :class="{'focus': languageTag === 'sc'}" @click="setLanguage('sc')">简体中文</span>
+      </div>
     </nav>
     <div id="tc-content">
       <hello v-if="$route.name === null"></hello>
       <div id="tc-user" @mouseleave="closeUserCtrl" :class="{'tc-user-hide': $route.name === null, 'tc-user-ctrl-open': userCtrlisOpen}">
-        <div class="tc-user-net">{{providerName}}</div>
+        <div class="tc-user-net">{{ $t(`App.network.${providerTag}`) }}</div>
         <div class="tc-user-info" @mouseover="openUserCtrl">
-          {{`${accountsCount} Account${accountsCount > 1 ? 's' : ''} in Session`}}
+          {{ $tc('App.account', accountsCount, {count: accountsCount}) }}
         </div>
         <div class="tc-user-ctrl">
-          <span @click.stop="goBack">Back to Home</span>
+          <span @click.stop="goBack">{{ $t('App.back') }}</span>
         </div>
       </div>
       <router-view @routerinit="initRouterEl"/>
     </div>
     <div id="tc-mask" v-if="accountsDialogIsOpen">
       <div class="tc-mask-box">
-        <span class="tc-mask-close" @click="endAddAccounts">Close X</span>
+        <span class="tc-mask-close" @click="endAddAccounts">{{ $t('App.close') }} X</span>
         <signin-account @done="endAddAccounts" @pass="endAddAccounts"></signin-account>
       </div>
     </div>
@@ -52,7 +63,8 @@ export default {
   },
   computed: {
     ...mapState({
-      providerName: state => state.providerName,
+      languageTag: state => state.languageTag,
+      providerTag: state => state.providerTag,
       accountsDialogIsOpen: state => state.accounts.accountsDialogIsOpen
     }),
     ...mapGetters([
@@ -73,6 +85,7 @@ export default {
       'updateEthereumInfo'
     ]),
     ...mapMutations([
+      'setLanguage',
       'endAddAccounts'
     ]),
     goBack () {
@@ -183,25 +196,19 @@ nav
   opacity 1
   color #014676
   background-color #fff
-.tc-nav-titlehover
-  opacity 1
-.tc-login
-  padding 60px
-  width 280px
-.tc-login input
-  float right
-  width 200px
-.tc-login div
-  height 40px
-  line-height 40px
-  margin-bottom 20px
-  clear both
-.tc-login span
-  width 80px
-  float left
-  line-height 40px
-  /* clear both */
-  cursor pointer
+.tc-nav-lang
+  position absolute
+  left 10px
+  bottom 10px
+  font-size 14px
+  span
+    transition padding-bottom .4s
+    cursor pointer
+    padding-bottom 10px
+    border-bottom solid 4px #fff
+  .focus
+    padding-bottom 6px
+
 #tc-content
   position relative
   flex auto

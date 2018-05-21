@@ -1,18 +1,18 @@
 <template>
   <div id="deploy" :style="{transform: `translateY(${pageTranslateY}px)`}">
     <div class="tc-card">
-      <div class="tc-title">Deploy Contract</div>
+      <div class="tc-title">{{ $t('Deploy.title') }}</div>
       <div class="select-method">
-        Deploy Contract By:&nbsp;
+        {{ $t('Deploy.deployBy') }}
         <div>
-          <span :class="{'active': needCompile}" @click="toggleSCMode('source')">Sol Source</span>
-          <span :class="{'active': !needCompile}" @click="toggleSCMode('code')">Code / Interface</span>
+          <span :class="{'active': needCompile}" @click="toggleSCMode('source')">{{ $t('Deploy.solSource') }}</span>
+          <span :class="{'active': !needCompile}" @click="toggleSCMode('code')">{{ $t('Deploy.codeAndApi') }}</span>
         </div>
-        <span class="resize" @click="resizeTextarea">resize</span>
+        <span class="resize" @click="resizeTextarea">{{ $t('Common.resize') }}</span>
       </div>
       <div class="code-input">
         <div v-if="needCompile" class="source-box">
-          <p>Solidity Source Code</p>
+          <p>{{ $t('Deploy.solSourceCode') }}</p>
           <textarea class="code"
             :class="{'input-active': needCompile}"
             :disabled="!needCompile"
@@ -27,7 +27,7 @@
           </div>
           <div class="button" @click="queryCompile">
             <icon-compile :config="{color: '#0d85da'}"></icon-compile>
-            <p>Compile</p>
+            <p>{{ $t('Deploy.compile') }}</p>
           </div>
           <div class="select-contract">
             <div v-if="defaultContractName">
@@ -40,12 +40,12 @@
           </div>
         </div>
         <div class="code-box">
-          <p>Compiled Code</p>
+          <p>{{ $t('Deploy.compiled') }}</p>
           <textarea class="code"
             :disabled="needCompile"
             v-model="compiledCode">
           </textarea>
-          <p>Interface JSON</p>
+          <p>{{ $t('Deploy.interface') }}</p>
           <textarea class="code"
             :disabled="needCompile"
             v-model="interfaceJSON">
@@ -63,7 +63,7 @@
       <div class="deploy-confirm">
         <div class="deploytx-info" v-html="deployTxInfo"></div>
         <div @click="deploy" :class="{'button-active': waitToDeploy}" class="button-blue">
-          <div>Deploy</div>
+          <div>{{ $t('Common.deploy') }}</div>
         </div>
       </div>
       <div class="clear"></div>
@@ -94,7 +94,7 @@ export default {
       isCompiling: false,
       deployConfig: {},
       computedGas: 0,
-      deployTxInfo: 'Tx info<br>',
+      deployTxInfo: this.$t('Common.txInfo.base'),
       waitToDeploy: false,
       pageTranslateY: 0,
       height: 0
@@ -204,7 +204,7 @@ export default {
       this.deployConfig = options
       this.web3.eth.getTransactionCount(this.deployConfig.from, 'pending').then(res => {
         this.deployConfig.nonce = res
-        this.deployTxInfo = 'Tx Info:<br>'
+        this.deployTxInfo = `${this.$t('Common.txInfo.base')}:<br>`
         this.deployTxInfo += `nonce: ${res} --- OK<br>`
         this.deployTxInfo += `from: ${this.deployConfig.from} --- OK<br>`
         const inputGasPrice = Number(this.web3.utils.fromWei(this.deployConfig.gasPrice, 'Gwei'))

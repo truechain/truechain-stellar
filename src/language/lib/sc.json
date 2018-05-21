@@ -1,0 +1,75 @@
+{
+  "name": "Stellar",
+  "App": {
+    "back": "返回首页",
+    "close": "关闭",
+    "account": "没有激活账户 | 已激活{count}个账户  | 已激活{count}个账户",
+    "router": {
+      "Interact": "合约调用",
+      "Deploy": "合约部署",
+      "Chain": "主网状态",
+      "Log": "日志"
+    },
+    "network": {
+      "mainnet": "ETH主网",
+      "ropsten": "Ropsten",
+      "unknow": "测试地址",
+      "privatenet": "私有网络"
+    }
+  },
+  "Interact": {
+    "title": "合约调用",
+    "contract": "选择合约",
+    "api": "接口JSON",
+    "address": "合约地址",
+    "interface": "接口",
+    "custom": "自定义"
+  },
+  "Deploy": {
+    "title": "部署合约",
+    "deployBy": "部署方式: ",
+    "solSource": "Sol 源代码",
+    "codeAndApi": "二进制代码 / 接口",
+    "solSourceCode": "Solidity源代码",
+    "compiled": "二进制代码",
+    "interface": "接口JSON",
+    "compile": "编译"
+  },
+  "CreateAccount": {
+    "title": "创建新账户",
+    "submit": "生成",
+    "noKeystore": "未生成keystore",
+    "canDownload": "下载你的keystore",
+    "passwordHelp": "请牢记你的密码！",
+    "keystoreNotice": "**务必妥善保管** 一旦丢失没有任何办法帮助你找回！"
+  },
+  "SigninAccount": {
+    "title": "添加账户",
+    "select": "选择keyStore文件"
+  },
+  "Selector": {
+    "noOptions": "无可用选项"
+  },
+  "SetTxConfig": {
+    "newAccount": "+ 添加新账户",
+    "noSugs": "无建议值",
+    "expected": "预计"
+  },
+  "Notice": {
+    "gasTooLow": "燃气费设置过低",
+    "gasTooHigh": "燃气费设置过高"
+  },
+  "Common": {
+    "password": "密码",
+    "repeat": "重复密码",
+    "decrypt": "解码",
+    "next": "下一步",
+    "send": "发送交易",
+    "skip": "跳过",
+    "deploy": "部署合约",
+    "txInfo": {
+      "base": "交易信息"
+    },
+    "resize": "还原窗口大小"
+  }
+}

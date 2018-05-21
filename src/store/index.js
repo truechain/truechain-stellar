@@ -12,14 +12,23 @@ Vue.use(Vuex)
 const debug = false
 
 const state = {
-  web3: new Web3(networkSet[0].provider),
-  providerName: networkSet[0].name
+  i18n: null,
+  languageTag: 'en',
+  web3: new Web3(networkSet[3].provider),
+  providerTag: networkSet[3].tag
 }
 
 const mutations = {
   setWeb3Provider (state, config) {
     state.web3.setProvider(config.provider)
-    state.providerName = config.name
+    state.providerTag = config.tag
+  },
+  initI18n (state, i18n) {
+    state.i18n = i18n
+  },
+  setLanguage (state, tag) {
+    state.i18n.locale = tag
+    state.languageTag = tag
   }
 }
 export default new Vuex.Store({

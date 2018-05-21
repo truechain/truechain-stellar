@@ -1,0 +1,75 @@
+{
+  "name": "Stellar",
+  "App": {
+    "back": "Back to Home",
+    "close": "Close",
+    "account": "no Accounts in Session | {count} Account in Session | {count} Accounts in Session",
+    "router": {
+      "Interact": "Interact",
+      "Deploy": "Deploy",
+      "Chain": "Chain",
+      "Log": "Log"
+    },
+    "network": {
+      "mainnet": "Main Net",
+      "ropsten": "Ropsten",
+      "unknow": "What's that",
+      "privatenet": "Private Net"
+    }
+  },
+  "Interact": {
+    "title": "Interact Contract",
+    "contract": "Contract",
+    "api": "Iterface JSON",
+    "address": "Address",
+    "interface": "Interface",
+    "custom": "Custom"
+  },
+  "Deploy": {
+    "title": "Deploy Contract",
+    "deployBy": "Deploy Contract By: ",
+    "solSource": "Sol Source",
+    "codeAndApi": "Code / Interface",
+    "solSourceCode": "Solidity Source Code",
+    "compiled": "Compiled Code",
+    "interface": "Interface JSON",
+    "compile": "Compile"
+  },
+  "CreateAccount": {
+    "title": "Create new Account",
+    "submit": "Submit",
+    "noKeystore": "No Keystore",
+    "canDownload": "Download your keystore",
+    "passwordHelp": "Do NOT forget to save this",
+    "keystoreNotice": "**Do not lose it!** It cannot be recovered if you lose it."
+  },
+  "SigninAccount": {
+    "title": "Add Account",
+    "select": "Select wallet flie"
+  },
+  "Selector": {
+    "noOptions": "No options"
+  },
+  "SetTxConfig": {
+    "newAccount": "+ add new Account",
+    "noSugs": "No suggestions",
+    "expected": "Expected"
+  },
+  "Notice": {
+    "gasTooLow": "Gas price set too low",
+    "gasTooHigh": "Gas price set too high"
+  },
+  "Common": {
+    "password": "Password",
+    "repeat": "Repeat",
+    "decrypt": "Decrypt",
+    "next": "Next",
+    "send": "Send",
+    "skip": "Skip",
+    "deploy": "Deploy",
+    "txInfo": {
+      "base": "Tx Info"
+    },
+    "resize": "resize"
+  }
+}
