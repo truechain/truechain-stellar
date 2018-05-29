@@ -17,7 +17,7 @@
     "network": {
       "mainnet": "Main Net",
       "ropsten": "Ropsten",
-      "unknow": "What's that",
+      "unknow": "Test Net",
       "privatenet": "Private Net"
     }
   },

@@ -28,9 +28,27 @@ export default {
   },
   methods: {
     check () {
-      this.isError = !this.isAddress(this.value) && this.value
-      this.$emit('update:isCorrect', !this.isError && this.value !== '')
+      if (/\[\]/.test(this.type)) {
+        return this.checkAsArray()
+      }
+      const isCorrect = this.isAddress(this.value)
+      this.isError = Boolean(!isCorrect && this.value)
+      this.$emit('update:isCorrect', isCorrect)
       this.$emit('pushData', this.index, this.value)
+    },
+    checkAsArray () {
+      let values = this.value.split(',')
+      let isCorrect = true
+      for (let i = 0; i < values.length; i++) {
+        const el = values[i]
+        isCorrect = isCorrect && this.isAddress(el)
+        if (!isCorrect) {
+          break
+        }
+      }
+      this.isError = Boolean(!isCorrect && this.value)
+      this.$emit('update:isCorrect', isCorrect)
+      this.$emit('pushData', this.index, values)
     }
   }
 }

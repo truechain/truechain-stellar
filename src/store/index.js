@@ -14,8 +14,8 @@ const debug = false
 const state = {
   i18n: null,
   languageTag: 'en',
-  web3: new Web3(networkSet[3].provider),
-  providerTag: networkSet[3].tag
+  web3: new Web3(networkSet[0].provider),
+  providerTag: networkSet[0].tag
 }
 
 const mutations = {
