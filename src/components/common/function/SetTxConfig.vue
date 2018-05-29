@@ -50,7 +50,7 @@ export default {
   },
   computed: {
     ...mapState({
-      'eth': 'eth',
+      'gasPrice': state => state.eth.gasPrice,
       'utils': state => state.web3.utils,
       'latestAccounts': state => state.accounts.latestAccounts
     }),
@@ -77,16 +77,17 @@ export default {
   watch: {
     latestAccounts (newValue) {
       if (this.utils.isAddress(newValue)) {
-        this.$refs.account.changeSelect(newValue)
-        this.options.from = newValue
+        this.$nextTick(() => {
+          this.$refs.account.changeSelect(newValue)
+        })
       }
     },
     computedGas (newValue) {
       this.options.gas = newValue
+    },
+    gasPrice (newValue) {
+      this.options.gasPrice = newValue
     }
-  },
-  created () {
-    this.options.gasPrice = this.eth.gasPrice
   },
   methods: {
     ...mapMutations([

@@ -21,8 +21,20 @@
     </nav>
     <div id="tc-content">
       <hello v-if="$route.name === null"></hello>
-      <div id="tc-user" @mouseleave="closeUserCtrl" :class="{'tc-user-hide': $route.name === null, 'tc-user-ctrl-open': userCtrlisOpen}">
-        <div class="tc-user-net">{{ $t(`App.network.${providerTag}`) }}</div>
+      <div id="tc-user" @mouseleave="onLeaveNav" :class="{'tc-user-hide': $route.name === null, 'tc-user-ctrl-open': userCtrlIsOpen}">
+        <div class="tc-user-net" :class="{'tc-user-net-hover': netCtrlIsOpen}" @mouseenter="openNetCtrl">{{ $t(`App.network.${providerTag}`) }}</div>
+        <transition name="netlist" :duration="400">
+          <div class="tc-user-netlist" v-if="netCtrlIsOpen">
+            <ul>
+              <li
+                v-for="(item,index) in networkSet"
+                :key="index"
+                @click="changeNetWork(index)">
+                {{ $t(`App.network.${item.tag}`) }}
+              </li>
+            </ul>
+          </div>
+        </transition>
         <div class="tc-user-info" @mouseover="openUserCtrl">
           {{ $tc('App.account', accountsCount, {count: accountsCount}) }}
         </div>
@@ -48,6 +60,7 @@ import routes from '@/router/routes.js'
 import Hello from '@/components/Hello'
 import LoadingAnimation from '@/components/common/gui/Loading'
 import SigninAccount from '@/components/common/function/SigninAccount'
+import networkSet from 'static/network.json'
 
 const ETH_NETWORK_UPDATE_CYCLE = 10000
 
@@ -56,9 +69,11 @@ export default {
   data: () => {
     return {
       routes,
-      userCtrlisOpen: false,
+      userCtrlIsOpen: false,
+      netCtrlIsOpen: false,
       noticeBox: null,
-      noticeBoxTimer: 0
+      noticeBoxTimer: 0,
+      networkSet
     }
   },
   computed: {
@@ -85,6 +100,7 @@ export default {
       'updateEthereumInfo'
     ]),
     ...mapMutations([
+      'setWeb3Provider',
       'setLanguage',
       'endAddAccounts'
     ]),
@@ -92,10 +108,19 @@ export default {
       this.$router.push('/')
     },
     openUserCtrl () {
-      this.userCtrlisOpen = true
+      this.userCtrlIsOpen = true
     },
-    closeUserCtrl () {
-      this.userCtrlisOpen = false
+    openNetCtrl () {
+      this.netCtrlIsOpen = true
+    },
+    onLeaveNav () {
+      this.netCtrlIsOpen = false
+      this.userCtrlIsOpen = false
+    },
+    changeNetWork (index) {
+      this.netCtrlIsOpen = false
+      this.setWeb3Provider(this.networkSet[index])
+      this.update()
     },
     notice (color, text, time) {
       let el = this.noticeBox
@@ -227,6 +252,30 @@ nav
   padding 0 20px
   margin-left 10px
   line-height 60px
+  transition background-color .6s
+.tc-user-net-hover
+  background-color #eef4f9
+.tc-user-netlist
+  position absolute
+  padding-top 2px
+  top 60px
+  left 0
+  margin 0 9px
+  overflow hidden
+  ul
+    background-color #FFF
+    border-radius 3px
+    border solid 1px #ddd
+    transition transform .4s
+  li
+    cursor pointer
+    line-height 40px
+    padding 0 20px
+    &:nth-child(even)
+      background-color #fbfbfb
+.netlist-enter, .netlist-leave-to
+  ul
+    transform translate3d(0, -110%, 0)
 .tc-user-info
   float right
   padding 0 20px

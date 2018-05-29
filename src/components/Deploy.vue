@@ -254,6 +254,8 @@ export default {
         throw err
       }
       this.waitToDeploy = false
+      window.d = contractDeploy
+      window.c = config
       contractDeploy.send(config)
         .then(console.log)
         .catch(err => {
