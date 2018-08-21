@@ -64,6 +64,7 @@
     "gasTooHigh": "燃气费设置过高"
   },
   "Common": {
+    "privateKey": "私钥",
     "password": "密码",
     "repeat": "重复密码",
     "decrypt": "解码",

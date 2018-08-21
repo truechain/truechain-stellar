@@ -4,10 +4,11 @@ contract SimpleStorage {
     uint storedData;
 
     function set(uint x) public {
+        require(x < 100, "Not enough Ether provided.");
         storedData = x;
     }
 
-    function get() public constant returns (uint) {
+    function get() public view returns (uint) {
         return storedData;
     }
 }
