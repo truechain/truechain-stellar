@@ -1,6 +1,8 @@
 import axios from 'axios'
 
-const URL = 'http://localhost:3000'
+const URL = process.env.NODE_ENV === 'production'
+  ? 'https://stellar.truechain.pro/ethserver'
+  : 'http://localhost:3000'
 
 export default {
   compile (source, version) {
