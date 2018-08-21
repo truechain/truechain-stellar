@@ -1,6 +1,9 @@
 <template>
   <div class="tc-card">
     <div class="tc-title">{{ $t('SigninAccount.title') }}</div>
+      <div class="tc-form-line">
+        <span>{{ $t('Common.privateKey') }}</span><input type="password" v-model="privateKey">
+      </div>
       <div class="signin-account-selkey" :class="{'active': inputPassword}">
         <span>{{ $t('SigninAccount.select') }}</span>
         <input type="file" @change="checkKeystore">
@@ -9,7 +12,7 @@
         <span>{{ $t('Common.password') }}</span><input type="password" v-model="password">
       </div>
       <div class="signin-account-buttons">
-        <div @click="decrypt" :class="{'button-active': password}" class="signin-account-decript">
+        <div @click="decrypt" :class="{'button-active': password || privateKey}" class="signin-account-decript">
           <div>{{ $t('Common.decrypt') }}</div>
         </div>
         <div @click="pass" class="signin-account-pass">{{ $t('Common.skip') }}</div>
@@ -26,6 +29,7 @@ export default {
     return {
       keystore: null,
       password: '',
+      privateKey: '',
       accountsCount: 1,
       inputPassword: false
     }
@@ -69,12 +73,22 @@ export default {
       }
     },
     decrypt () {
-      try {
-        const account = this.accounts.decrypt(this.keystore, this.password)
-        this.saveAccounts([account])
-        this.$emit('done')
-      } catch (err) {
-        console.log(err.message)
+      if (this.privateKey) {
+        try {
+          const account = this.accounts.privateKeyToAccount(this.privateKey)
+          this.saveAccounts([account])
+          this.$emit('done')
+        } catch (err) {
+          console.error(err.message)
+        }
+      } else {
+        try {
+          const account = this.accounts.decrypt(this.keystore, this.password)
+          this.saveAccounts([account])
+          this.$emit('done')
+        } catch (err) {
+          console.error(err.message)
+        }
       }
     },
     pass () {

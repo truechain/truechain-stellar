@@ -64,6 +64,7 @@
     "gasTooHigh": "Gas price set too high"
   },
   "Common": {
+    "privateKey": "Private Key",
     "password": "Password",
     "repeat": "Repeat",
     "decrypt": "Decrypt",
