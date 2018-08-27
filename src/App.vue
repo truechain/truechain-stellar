@@ -42,7 +42,7 @@
           <span @click.stop="goBack">{{ $t('App.back') }}</span>
         </div>
       </div>
-      <router-view @routerinit="initRouterEl"/>
+      <router-view v-if="!beforeRefresh" @routerinit="initRouterEl"/>
     </div>
     <div id="tc-mask" v-if="accountsDialogIsOpen">
       <div class="tc-mask-box">
@@ -69,6 +69,7 @@ export default {
   data: () => {
     return {
       routes,
+      beforeRefresh: false,
       userCtrlIsOpen: false,
       netCtrlIsOpen: false,
       noticeBox: null,
@@ -121,6 +122,10 @@ export default {
       this.netCtrlIsOpen = false
       this.setWeb3Provider(this.networkSet[index])
       this.update()
+      this.beforeRefresh = true
+      this.$nextTick(() => {
+        this.beforeRefresh = false
+      })
     },
     notice (color, text, time) {
       let el = this.noticeBox

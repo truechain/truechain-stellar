@@ -43,7 +43,7 @@ export default {
     return {
       options: {
         from: '',
-        gas: '0',
+        gas: this.computedGas,
         gasPrice: '20000000000'
       }
     }
@@ -99,6 +99,7 @@ export default {
           this.toAddAccounts()
         }
       } else {
+        this.$emit('selectFrom', key)
         this.options.from = key
       }
     },

@@ -9,6 +9,7 @@
     "close": "关闭",
     "account": "没有激活账户 | 已激活{count}个账户  | 已激活{count}个账户",
     "router": {
+      "Transfer": "转账",
       "Interact": "合约调用",
       "Deploy": "合约部署",
       "Chain": "主网状态",
@@ -20,6 +21,9 @@
       "unknow": "测试网络",
       "privatenet": "私有网络"
     }
+  },
+  "Transfer": {
+    "title": "转账"
   },
   "Interact": {
     "title": "合约调用",

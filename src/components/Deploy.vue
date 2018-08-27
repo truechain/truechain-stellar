@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import api from '@/api-config'
 
 import IconCompile from 'svg-icon/compile'
@@ -133,9 +133,6 @@ export default {
   methods: {
     ...mapActions([
       'pushAccountToWallet'
-    ]),
-    ...mapMutations([
-      'toAddAccounts'
     ]),
     toggleSCMode (mode) {
       this.sourceCode = ''
@@ -206,7 +203,7 @@ export default {
         this.deployConfig.nonce = res
         this.deployTxInfo = `${this.$t('Common.txInfo.base')}:<br>`
         this.deployTxInfo += `nonce: ${res} --- OK<br>`
-        this.deployTxInfo += `from: ${this.deployConfig.from} --- OK<br>`
+        this.deployTxInfo += `from: ${this.deployConfig.from.substr(0, 22)}... --- OK<br>`
         const inputGasPrice = Number(this.web3.utils.fromWei(this.deployConfig.gasPrice, 'Gwei'))
         let gasPriceStatus = 'OK'
         if (inputGasPrice < this.eth.MIN_GAS_PRICE_GWEI) {
