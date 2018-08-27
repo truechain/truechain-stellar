@@ -239,7 +239,7 @@ export default {
         this.txConfig = { nonce: res, ...options }
         this.txInfo = `${this.$t('Common.txInfo.base')}:<br>`
         this.txInfo += `nonce: ${res} --- OK<br>`
-        this.txInfo += `from: ${options.from} --- OK<br>`
+        this.txInfo += `from: ${options.from.substr(0, 22)}... --- OK<br>`
         const inputGasPrice = Number(this.web3.utils.fromWei(options.gasPrice, 'Gwei'))
         let gasPriceStatus = 'OK'
         if (inputGasPrice < this.eth.MIN_GAS_PRICE_GWEI) {
@@ -324,10 +324,10 @@ export default {
   margin -10px 0 20px
 .input-data-boxs
   padding-left 20px
+  font-size 14px
   span
     display block
     margin-top 8px
-    font-size 14px
     line-height 22px
 .tx-info
   margin-bottom 20px

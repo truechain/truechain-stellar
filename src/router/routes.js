@@ -1,6 +1,7 @@
 // import Home from '@/components/Home'
 import Deploy from '@/components/Deploy'
 import Interact from '@/components/Interact'
+import Transfer from '@/components/Transfer'
 import Chain from '@/components/Chain'
 import Log from '@/components/Log'
 
@@ -10,6 +11,11 @@ export default [
   //   name: 'Home',
   //   component: Home
   // },
+  {
+    path: '/transfer',
+    name: 'Transfer',
+    component: Transfer
+  },
   {
     path: '/interact',
     name: 'Interact',
