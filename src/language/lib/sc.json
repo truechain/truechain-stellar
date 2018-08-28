@@ -18,8 +18,9 @@
     "network": {
       "mainnet": "ETH主网",
       "ropsten": "Ropsten",
-      "unknow": "测试网络",
-      "privatenet": "私有网络"
+      "privatenet": "私有网络",
+      "localnet": "本地网络",
+      "unknow": "测试网络"
     }
   },
   "Transfer": {
