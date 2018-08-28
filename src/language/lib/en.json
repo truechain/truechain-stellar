@@ -18,8 +18,9 @@
     "network": {
       "mainnet": "Main Net",
       "ropsten": "Ropsten",
-      "unknow": "Test Net",
-      "privatenet": "Private Net"
+      "privatenet": "Private Net",
+      "localnet": "Local Net",
+      "unknow": "Test Net"
     }
   },
   "Transfer": {

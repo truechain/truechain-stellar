@@ -10,13 +10,13 @@
     "provider": "https://ropsten.infura.io/"
   },
   {
-    "name": "What's that",
-    "tag": "unknow",
-    "provider": "ws://39.105.126.32:8546"
-  },
-  {
     "name": "Private Net",
     "tag": "privatenet",
-    "provider": "http://127.0.0.1:8545"
+    "provider": "http://39.105.126.32:8545"
+  },
+  {
+    "name": "Local Net",
+    "tag": "localnet",
+    "provider": "https://127.0.0.1:8545"
   }
 ]
