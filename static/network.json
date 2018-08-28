@@ -12,7 +12,7 @@
   {
     "name": "Private Net",
     "tag": "privatenet",
-    "provider": "http://39.105.126.32:8545"
+    "provider": "wss://www.truescan.net/peer/"
   },
   {
     "name": "Local Net",
