@@ -40,7 +40,6 @@ const mutations = {
 
 const actions = {
   notice ({ state }, [color, text, time]) {
-    console.log(color, text, time)
     let el = state.noticeBox
     if (!el) {
       return

@@ -2,7 +2,7 @@
   <div class="tc-card">
     <div class="tc-title">{{ $t('SigninAccount.title') }}</div>
       <div class="tc-form-line">
-        <span>{{ $t('Common.privateKey') }}</span><input type="password" v-model="privateKey">
+        <span>{{ $t('SigninAccount.privateKey') }}</span><input type="password" v-model="privateKey">
       </div>
       <div class="signin-account-selkey" :class="{'active': inputPassword}">
         <span>{{ $t('SigninAccount.select') }}</span>
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
   name: 'SigninAccount',
@@ -43,12 +43,15 @@ export default {
     ...mapMutations([
       'saveAccounts'
     ]),
+    ...mapActions([
+      'notice'
+    ]),
     checkKeystore (e) {
       const files = e.target.files
       if (files && files.length) {
         const file = files[0]
         if (file.size > 200000) {
-          console.log('to large')
+          this.notice(['error', this.$t('Common.notice.ksTooLarge'), 5000])
           return
         }
         const reader = new FileReader()
@@ -58,7 +61,7 @@ export default {
           try {
             data = JSON.parse(this.result)
           } catch (err) {
-            console.log(err)
+            self.notice(['error', this.$t('Common.notice.ksParseErr'), 5000])
             return
           }
           self.keystore = data
@@ -79,7 +82,7 @@ export default {
           this.saveAccounts([account])
           this.$emit('done')
         } catch (err) {
-          console.error(err.message)
+          this.notice(['error', this.$t('Common.notice.ksPkErr') + (err.message || err), 5000])
         }
       } else {
         try {
@@ -87,7 +90,7 @@ export default {
           this.saveAccounts([account])
           this.$emit('done')
         } catch (err) {
-          console.error(err.message)
+          this.notice(['error', this.$t('Common.notice.ksPwErr') + (err.message || err), 5000])
         }
       }
     },

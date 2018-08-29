@@ -47,14 +47,15 @@
   "CreateAccount": {
     "title": "创建新账户",
     "submit": "生成",
-    "noKeystore": "未生成keystore",
-    "canDownload": "下载你的keystore",
+    "noKeystore": "未生成KeyStore",
+    "canDownload": "下载你的KeyStore",
     "passwordHelp": "请牢记你的密码！",
     "keystoreNotice": "**务必妥善保管** 一旦丢失没有任何办法帮助你找回！"
   },
   "SigninAccount": {
     "title": "添加账户",
-    "select": "选择keyStore文件"
+    "privateKey": "从私钥导入",
+    "select": "或者 选择KeyStore文件"
   },
   "Selector": {
     "noOptions": "无可用选项"
@@ -69,7 +70,6 @@
     "gasTooHigh": "燃气费设置过高"
   },
   "Common": {
-    "privateKey": "私钥",
     "password": "密码",
     "repeat": "重复密码",
     "decrypt": "解码",
@@ -82,9 +82,18 @@
     },
     "resize": "还原窗口大小",
     "notice": {
-      "afterSend": "交易已发出",
-      "txError": "交易失败",
-      "txSuccess": "交易成功 交易ID："
+      "error": "错误 ",
+      "warn": "注意 ",
+      "response": "查询结果：",
+      "ksTooLarge": "所选文件过大",
+      "ksParseErr": "KeyStore文件格式错误",
+      "ksPkErr": "私钥使用失败：",
+      "ksPwErr": "KeyStore解析失败：",
+      "afterSend": "交易已发出 ID：",
+      "txError": "交易失败 ",
+      "txSuccess": "交易成功 交易ID：",
+      "compileError": "编译失败 ",
+      "compileSuccess": "编译成功"
     }
   }
 }

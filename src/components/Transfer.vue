@@ -137,13 +137,16 @@ export default {
       } catch (err) {
         throw err
       }
-      this.notice(['log', this.$t('Common.notice.afterSend'), 10000])
-      this.web3.eth.sendTransaction(this.txConfig).then(res => {
-        console.log(res.transactionHash, res.blockNumber)
-        this.notice(['log', this.$t('Common.notice.txSuccess') + res.transactionHash, 10000])
-      }).catch(err => {
-        this.notice(['error', this.$t('Common.notice.txError') + ' ' + (err.message || err), 10000])
-      })
+      this.web3.eth.sendTransaction(this.txConfig)
+        .on('transactionHash', hash => {
+          this.notice(['log', this.$t('Common.notice.afterSend') + hash, 10000])
+        })
+        .on('receipt', res => {
+          this.notice(['log', this.$t('Common.notice.txSuccess') + res.transactionHash, 10000])
+        })
+        .on('error', err => {
+          this.notice(['error', this.$t('Common.notice.txError') + (err.message || err), 10000])
+        })
     }
   },
   components: {

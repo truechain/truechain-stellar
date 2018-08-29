@@ -154,7 +154,7 @@ export default {
         }
         let contentH = window.innerHeight - 60
         if (obj.height + obj.pageTranslateY < contentH) {
-          obj.pageTranslateY = Math.min(contentH - obj.height, 0)
+          obj.pageTranslateY = Math.min(contentH - obj.height, -100)
         }
       }
     },
