@@ -80,6 +80,11 @@
     "txInfo": {
       "base": "Tx Info"
     },
-    "resize": "resize"
+    "resize": "resize",
+    "notice": {
+      "afterSend": "Transaction has been send",
+      "txError": "Transaction failed",
+      "txSuccess": "Transaction succeed, ID: "
+    }
   }
 }

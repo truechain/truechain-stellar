@@ -80,6 +80,11 @@
     "txInfo": {
       "base": "交易信息"
     },
-    "resize": "还原窗口大小"
+    "resize": "还原窗口大小",
+    "notice": {
+      "afterSend": "交易已发出",
+      "txError": "交易失败",
+      "txSuccess": "交易成功 交易ID："
+    }
   }
 }

@@ -21,10 +21,16 @@
     </nav>
     <div id="tc-content">
       <hello v-if="$route.name === null"></hello>
-      <div id="tc-user" @mouseleave="onLeaveNav" :class="{'tc-user-hide': $route.name === null, 'tc-user-ctrl-open': userCtrlIsOpen}">
-        <div class="tc-user-net" :class="{'tc-user-net-hover': netCtrlIsOpen}" @mouseenter="openNetCtrl">{{ $t(`App.network.${providerTag}`) }}</div>
+      <div id="tc-user" @mouseleave="setHoverObjIndex(0)" :class="{
+        'tc-user-hide': $route.name === null,
+        'tc-user-ctrl-open': hoverNav === 2
+      }">
+        <div class="tc-user-net" :class="{ 'tc-user-net-hover': hoverNav === 1 }" @mouseenter="setHoverObjIndex(1)">
+          {{ $t(`App.network.${providerTag}`) }}
+        </div>
+        <div class="tc-user-netstatus" :style="{ 'background-color': netWorking ? '#009000' : '#d41400' }" />
         <transition name="netlist" :duration="400">
-          <div class="tc-user-netlist" v-if="netCtrlIsOpen">
+          <div class="tc-user-netlist" v-if="hoverNav === 1">
             <ul>
               <li
                 v-for="(item,index) in networkSet"
@@ -35,14 +41,14 @@
             </ul>
           </div>
         </transition>
-        <div class="tc-user-info" @mouseover="openUserCtrl">
+        <div class="tc-user-info" @mouseover="setHoverObjIndex(2)">
           {{ $tc('App.account', accountsCount, {count: accountsCount}) }}
         </div>
         <div class="tc-user-ctrl">
           <span @click.stop="goBack">{{ $t('App.back') }}</span>
         </div>
       </div>
-      <router-view v-if="!beforeRefresh" @routerinit="initRouterEl"/>
+      <router-view ref="view" v-if="!beforeRefresh" @routerinit="initRouterEl"/>
     </div>
     <div id="tc-mask" v-if="accountsDialogIsOpen">
       <div class="tc-mask-box">
@@ -70,11 +76,11 @@ export default {
     return {
       routes,
       beforeRefresh: false,
-      userCtrlIsOpen: false,
-      netCtrlIsOpen: false,
+      hoverNav: 0,
       noticeBox: null,
       noticeBoxTimer: 0,
-      networkSet
+      networkSet,
+      netWorking: true
     }
   },
   computed: {
@@ -93,8 +99,9 @@ export default {
     setInterval(this.update, ETH_NETWORK_UPDATE_CYCLE)
   },
   mounted () {
-    this.noticeBox = this.$el.querySelector('#tc-notice')
-    window.notice = this.notice
+    const noticeBox = this.$el.querySelector('#tc-notice')
+    this.bindNoticeBox(noticeBox)
+    window.addEventListener('resize', this.onresize)
   },
   methods: {
     ...mapActions([
@@ -103,50 +110,29 @@ export default {
     ...mapMutations([
       'setWeb3Provider',
       'setLanguage',
-      'endAddAccounts'
+      'endAddAccounts',
+      'bindNoticeBox'
     ]),
     goBack () {
       this.$router.push('/')
     },
-    openUserCtrl () {
-      this.userCtrlIsOpen = true
+    onresize () {
+      const updateSize = this.$refs.view.updateSize
+      if (typeof updateSize === 'function') {
+        updateSize()
+      }
     },
-    openNetCtrl () {
-      this.netCtrlIsOpen = true
-    },
-    onLeaveNav () {
-      this.netCtrlIsOpen = false
-      this.userCtrlIsOpen = false
+    setHoverObjIndex (index) {
+      this.hoverNav = index
     },
     changeNetWork (index) {
-      this.netCtrlIsOpen = false
+      this.hoverNav = 0
       this.setWeb3Provider(this.networkSet[index])
       this.update()
       this.beforeRefresh = true
       this.$nextTick(() => {
         this.beforeRefresh = false
       })
-    },
-    notice (color, text, time) {
-      let el = this.noticeBox
-      if (!el) {
-        return
-      }
-      let delay = 0
-      if (this.noticeBoxTimer) {
-        clearTimeout(this.noticeBoxTimer)
-        delay = 300
-      }
-      el.style.transform = 'translateY(110%)'
-      el.style.backgroundColor = color
-      el.innerHTML = text
-      setTimeout(() => {
-        el.style.transform = 'translateY(0%)'
-      }, delay)
-      this.noticeBoxTimer = setTimeout(() => {
-        el.style.transform = 'translateY(110%)'
-        this.noticeBoxTimer = 0
-      }, delay + time)
     },
     initRouterEl (obj) {
       obj.updateSize = function () {
@@ -174,12 +160,19 @@ export default {
     },
     update () {
       // const time = new Date()
-      this.updateEthereumInfo()
+      this.updateEthereumInfo().then(() => {
+        this.netWorking = true
+      }).catch(() => {
+        this.netWorking = false
+      })
       // .then(() => {
       //   const finTime = new Date()
       //   console.log(`Ethereum info update at ${time}. elapsed ${finTime - time} ms`)
       // })
     }
+  },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.onresize)
   },
   components: {
     Hello,
@@ -260,6 +253,16 @@ nav
   transition background-color .6s
 .tc-user-net-hover
   background-color #eef4f9
+.tc-user-netstatus
+  width 8px
+  height 8px
+  border-radius 4px
+  background-color green
+  position absolute
+  top 26px
+  left 16px
+  animation breath 2s infinite alternate
+  transition background-color .6s
 .tc-user-netlist
   position absolute
   padding-top 2px
@@ -340,6 +343,12 @@ nav
   box-sizing border-box
   line-height 20px
   color #fff
+
+@keyframes breath
+  from
+    opacity 1
+  to
+    opacity .6
 
 .fly-right-enter-active, .fly-right-leave-active
   transition transform 1s
