@@ -62,7 +62,7 @@ const actions = {
     }
     el.style.transform = 'translateY(110%)'
     el.style.backgroundColor = color
-    el.innerHTML = text
+    el.innerText = text
     setTimeout(() => {
       el.style.transform = 'translateY(0%)'
     }, delay)

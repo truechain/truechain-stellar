@@ -267,18 +267,24 @@ export default {
       if (this.focusInterface.constant) {
         const outputs = [...this.focusInterface.outputs]
         tx.call().then(res => {
+          if (typeof res !== 'object') {
+            res = [res]
+          }
           let result = ''
           for (let i = 0; i < outputs.length; i++) {
             const output = outputs[i]
-            result += `${output.name || 'Arg' + (i + 1)}: &lt;${output.type}&gt; ${res[i]}, `
+            result += `${output.name || 'Arg' + (i + 1)}: <${output.type}> ${res[i]}, `
           }
           this.notice(['log', this.$t('Common.notice.response') + result.slice(0, -2), 10000])
+        }).catch(err => {
+          this.notice(['error', this.$t('Common.notice.error') + (err.message || err), 10000])
         })
       } else {
         try {
           this.pushAccountToWallet(this.txConfig.from)
         } catch (err) {
-          throw err
+          this.notice(['error', this.$t('Common.notice.error') + (err.message || err), 10000])
+          return
         }
         tx.send(this.txConfig)
           .on('transactionHash', hash => {
