@@ -1,5 +1,5 @@
 <template>
-  <div id="transfer">
+  <div id="transfer" :style="{transform: `translateY(${pageTranslateY}px)`}">
     <div class="tc-card">
       <div class="tc-title">{{ $t('Transfer.title') }}</div>
       <div class="trans-input">
@@ -53,7 +53,10 @@ export default {
       correctToValue: false,
       waitToSend: false,
       txInfo: this.$t('Common.txInfo.base'),
-      txConfig: {}
+      txConfig: {},
+
+      pageTranslateY: 0,
+      height: 0
     }
   },
   computed: {
@@ -62,9 +65,17 @@ export default {
       'eth'
     ])
   },
+  created () {
+    this.$emit('routerinit', this)
+  },
+  mounted () {
+    this.height = this.$el.getBoundingClientRect().height
+    this.$el.addEventListener('mousewheel', this.onMousewheel)
+  },
   methods: {
     ...mapActions([
-      'pushAccountToWallet'
+      'pushAccountToWallet',
+      'notice'
     ]),
     updateToAdr (_, value) {
       this.toAddress = value
@@ -88,8 +99,8 @@ export default {
       })
     },
     onNext (options) {
-      this.txConfig = options
-      this.web3.eth.getTransactionCount(this.txConfig.from, 'pending').then(res => {
+      this.web3.eth.getTransactionCount(options.from, 'pending').then(res => {
+        this.txConfig = { nonce: res, ...options }
         this.txConfig.nonce = res
         this.txConfig.to = this.toAddress
         this.txConfig.value = this.value
@@ -126,7 +137,13 @@ export default {
       } catch (err) {
         throw err
       }
-      this.web3.eth.sendTransaction(this.txConfig).then(console.log)
+      this.notice(['log', this.$t('Common.notice.afterSend'), 10000])
+      this.web3.eth.sendTransaction(this.txConfig).then(res => {
+        console.log(res.transactionHash, res.blockNumber)
+        this.notice(['log', this.$t('Common.notice.txSuccess') + res.transactionHash, 10000])
+      }).catch(err => {
+        this.notice(['error', this.$t('Common.notice.txError') + ' ' + (err.message || err), 10000])
+      })
     }
   },
   components: {

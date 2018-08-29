@@ -166,7 +166,6 @@ export default {
   mounted () {
     this.height = this.$el.getBoundingClientRect().height
     this.$el.addEventListener('mousewheel', this.onMousewheel)
-    window.addEventListener('resize', this.updateSize)
   },
   methods: {
     ...mapActions([
