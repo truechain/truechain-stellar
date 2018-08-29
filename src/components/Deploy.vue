@@ -118,7 +118,7 @@ export default {
           this.computedGas = res
         }).catch(err => {
           this.computedGas = ''
-          console.log(err)
+          this.notice(['warn', this.$t('Common.notice.warn') + (err.message || err), 10000])
         })
     }
   },
@@ -131,7 +131,8 @@ export default {
   },
   methods: {
     ...mapActions([
-      'pushAccountToWallet'
+      'pushAccountToWallet',
+      'notice'
     ]),
     toggleSCMode (mode) {
       this.sourceCode = ''
@@ -162,11 +163,9 @@ export default {
       api.compile(this.sourceCode).then(res => {
         const data = res.data
         if (data.error) {
-          console.error(data.msg)
+          this.notice(['error', this.$t('Common.notice.compileError'), 10000])
           if (data.details) {
-            for (const key in data.details) {
-              console.error(`  ${data.details[key]}`)
-            }
+            console.log('%c' + data.details.join('\n\n'), 'color: red;')
           }
         } else {
           for (const contractName in data.contracts) {
@@ -182,9 +181,10 @@ export default {
           this.defaultContractName = lastContractName
           this.compiledCode = this.contracts[lastContractName].bytecode
           this.interfaceJSON = this.contracts[lastContractName].interface
+          this.notice(['log', this.$t('Common.notice.compileSuccess'), 10000])
         }
       }).catch(err => {
-        console.warn(err)
+        this.notice(['error', this.$t('Common.notice.error') + (err.message || err), 10000])
       }).then(() => {
         this.isCompiling = false
       })
@@ -229,7 +229,7 @@ export default {
       try {
         interfaceObj = JSON.parse(this.interfaceJSON)
       } catch (err) {
-        console.error(err)
+        this.notice(['error', this.$t('Common.notice.error') + (err.message || err), 10000])
         return
       }
       const newContract = new this.web3.eth.Contract(interfaceObj)
@@ -247,17 +247,21 @@ export default {
       try {
         this.pushAccountToWallet(this.deployConfig.from)
       } catch (err) {
-        throw err
+        this.notice(['error', this.$t('Common.notice.error') + (err.message || err), 10000])
+        return
       }
       this.waitToDeploy = false
       window.d = contractDeploy
       window.c = config
       contractDeploy.send(config)
-        .then(console.log)
-        .catch(err => {
-          if (err) {
-            console.error(err.stack)
-          }
+        .on('transactionHash', hash => {
+          this.notice(['log', this.$t('Common.notice.afterSend') + hash, 10000])
+        })
+        .on('receipt', res => {
+          this.notice(['log', this.$t('Common.notice.txSuccess') + res.transactionHash, 10000])
+        })
+        .on('error', err => {
+          this.notice(['error', this.$t('Common.notice.txError') + (err.message || err), 10000])
         })
     }
   },

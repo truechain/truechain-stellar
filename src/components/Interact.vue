@@ -169,7 +169,8 @@ export default {
   },
   methods: {
     ...mapActions([
-      'pushAccountToWallet'
+      'pushAccountToWallet',
+      'notice'
     ]),
     setComputedGas (value) {
       this.computedGas = value
@@ -227,11 +228,12 @@ export default {
         return
       }
       this.focusContract.options.address = this.contract.address
-      try {
-        this.focusContract.methods[this.focusInterface.name](...this.inputArguments).estimateGas().then(this.setComputedGas)
-      } catch (err) {
-        this.setComputedGas('')
-      }
+      this.focusContract.methods[this.focusInterface.name](...this.inputArguments)
+        .estimateGas()
+        .then(this.setComputedGas)
+        .catch(err => {
+          this.notice(['warn', this.$t('Common.notice.warn') + (err.message || err), 10000])
+        })
     },
     onNext (options) {
       this.web3.eth.getTransactionCount(options.from, 'latest').then(res => {
@@ -263,7 +265,15 @@ export default {
       this.focusContract.options.address = this.contract.address
       const tx = this.focusContract.methods[this.focusInterface.name](...this.inputArguments)
       if (this.focusInterface.constant) {
-        tx.call().then(console.log)
+        const outputs = [...this.focusInterface.outputs]
+        tx.call().then(res => {
+          let result = ''
+          for (let i = 0; i < outputs.length; i++) {
+            const output = outputs[i]
+            result += `${output.name || 'Arg' + (i + 1)}: &lt;${output.type}&gt; ${res[i]}, `
+          }
+          this.notice(['log', this.$t('Common.notice.response') + result.slice(0, -2), 10000])
+        })
       } else {
         try {
           this.pushAccountToWallet(this.txConfig.from)
@@ -271,11 +281,14 @@ export default {
           throw err
         }
         tx.send(this.txConfig)
-          .then(console.log)
-          .catch(err => {
-            if (err) {
-              console.error(err.stack)
-            }
+          .on('transactionHash', hash => {
+            this.notice(['log', this.$t('Common.notice.afterSend') + hash, 10000])
+          })
+          .on('receipt', res => {
+            this.notice(['log', this.$t('Common.notice.txSuccess') + res.transactionHash, 10000])
+          })
+          .on('error', err => {
+            this.notice(['error', this.$t('Common.notice.txError') + (err.message || err), 10000])
           })
         this.txConfig = {}
       }

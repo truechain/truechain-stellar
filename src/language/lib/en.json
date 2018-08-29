@@ -47,14 +47,15 @@
   "CreateAccount": {
     "title": "Create new Account",
     "submit": "Submit",
-    "noKeystore": "No Keystore",
-    "canDownload": "Download your keystore",
+    "noKeystore": "No KeyStore",
+    "canDownload": "Download your KeyStore",
     "passwordHelp": "Do NOT forget to save this",
     "keystoreNotice": "**Do not lose it!** It cannot be recovered if you lose it."
   },
   "SigninAccount": {
     "title": "Add Account",
-    "select": "Select wallet flie"
+    "privateKey": "from Private Key",
+    "select": "or Select KeyStore flie"
   },
   "Selector": {
     "noOptions": "No options"
@@ -69,7 +70,6 @@
     "gasTooHigh": "Gas price set too high"
   },
   "Common": {
-    "privateKey": "Private Key",
     "password": "Password",
     "repeat": "Repeat",
     "decrypt": "Decrypt",
@@ -82,9 +82,18 @@
     },
     "resize": "resize",
     "notice": {
-      "afterSend": "Transaction has been send",
-      "txError": "Transaction failed",
-      "txSuccess": "Transaction succeed, ID: "
+      "error": "Error ",
+      "warn": "Warn ",
+      "response": "Response: ",
+      "ksTooLarge": "The selected file is too large",
+      "ksParseErr": "KeyStore file format wrong",
+      "ksPkErr": "Private key usage failed: ",
+      "ksPwErr": "KeyStore decrypt failed: ",
+      "afterSend": "Transaction has been send, ID:",
+      "txError": "Transaction failed, ",
+      "txSuccess": "Transaction succeed, ID: ",
+      "compileError": "Compile failed ",
+      "compileSuccess": "Compile succeed"
     }
   }
 }
