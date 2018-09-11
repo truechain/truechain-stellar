@@ -99,7 +99,8 @@ export default {
       })
     },
     onNext (options) {
-      this.web3.eth.getTransactionCount(options.from, 'pending').then(res => {
+      // this.web3.eth.getTransactionCount(options.from, 'pending').then(res => {
+      this.web3.eth.getTransactionCount(options.from).then(res => {
         this.txConfig = { nonce: res, ...options }
         this.txConfig.nonce = res
         this.txConfig.to = this.toAddress

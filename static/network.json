@@ -1,20 +1,5 @@
 [
   {
-    "name": "Main Net",
-    "tag": "mainnet",
-    "provider": "https://mainnet.infura.io/"
-  },
-  {
-    "name": "Ropsten",
-    "tag": "ropsten",
-    "provider": "https://ropsten.infura.io/"
-  },
-  {
-    "name": "Private Net",
-    "tag": "privatenet",
-    "provider": "wss://www.truescan.net/peer/"
-  },
-  {
     "name": "Local Net",
     "tag": "localnet",
     "provider": "http://127.0.0.1:8545"

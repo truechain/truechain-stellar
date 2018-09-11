@@ -236,7 +236,8 @@ export default {
         })
     },
     onNext (options) {
-      this.web3.eth.getTransactionCount(options.from, 'latest').then(res => {
+      // this.web3.eth.getTransactionCount(options.from, 'pending').then(res => {
+      this.web3.eth.getTransactionCount(options.from).then(res => {
         this.txConfig = { nonce: res, ...options }
         this.txInfo = `${this.$t('Common.txInfo.base')}:<br>`
         this.txInfo += `nonce: ${res} --- OK<br>`
