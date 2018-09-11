@@ -198,7 +198,8 @@ export default {
     },
     onNext (options) {
       this.deployConfig = options
-      this.web3.eth.getTransactionCount(this.deployConfig.from, 'pending').then(res => {
+      // this.web3.eth.getTransactionCount(this.deployConfig.from, 'pending').then(res => {
+      this.web3.eth.getTransactionCount(this.deployConfig.from).then(res => {
         this.deployConfig.nonce = res
         this.deployTxInfo = `${this.$t('Common.txInfo.base')}:<br>`
         this.deployTxInfo += `nonce: ${res} --- OK<br>`
