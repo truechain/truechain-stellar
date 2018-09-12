@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import api from '@/api-config'
 
 import IconCompile from 'svg-icon/compile'
@@ -130,6 +130,10 @@ export default {
     this.$el.addEventListener('mousewheel', this.onMousewheel)
   },
   methods: {
+    ...mapMutations({
+      'afterTxSend': 'log/afterTxSend',
+      'afterTxReceipt': 'log/afterTxReceipt'
+    }),
     ...mapActions([
       'pushAccountToWallet',
       'notice'
@@ -252,14 +256,15 @@ export default {
         return
       }
       this.waitToDeploy = false
-      window.d = contractDeploy
-      window.c = config
+      const from = this.txConfig.from
       contractDeploy.send(config)
         .on('transactionHash', hash => {
+          this.afterTxSend({ hash, from })
           this.notice(['log', this.$t('Common.notice.afterSend') + hash, 10000])
         })
-        .on('receipt', res => {
-          this.notice(['log', this.$t('Common.notice.txSuccess') + res.transactionHash, 10000])
+        .on('receipt', rec => {
+          this.afterTxReceipt(rec)
+          this.notice(['log', this.$t('Common.notice.txSuccess') + rec.transactionHash, 10000])
         })
         .on('error', err => {
           this.notice(['error', this.$t('Common.notice.txError') + (err.message || err), 10000])

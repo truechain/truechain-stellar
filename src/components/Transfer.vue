@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import InputAddress from '@/components/common/gui/InputAddress'
 import InputUint from '@/components/common/gui/InputUint'
 import SetTxConfig from '@/components/common/function/SetTxConfig'
@@ -73,6 +73,10 @@ export default {
     this.$el.addEventListener('mousewheel', this.onMousewheel)
   },
   methods: {
+    ...mapMutations({
+      'afterTxSend': 'log/afterTxSend',
+      'afterTxReceipt': 'log/afterTxReceipt'
+    }),
     ...mapActions([
       'pushAccountToWallet',
       'notice'
@@ -138,12 +142,17 @@ export default {
       } catch (err) {
         throw err
       }
+      const from = this.txConfig.from
+      const to = this.txConfig.to
+      const value = this.txConfig.value
       this.web3.eth.sendTransaction(this.txConfig)
         .on('transactionHash', hash => {
+          this.afterTxSend({ hash, from, to, value })
           this.notice(['log', this.$t('Common.notice.afterSend') + hash, 10000])
         })
-        .on('receipt', res => {
-          this.notice(['log', this.$t('Common.notice.txSuccess') + res.transactionHash, 10000])
+        .on('receipt', rec => {
+          this.afterTxReceipt(rec)
+          this.notice(['log', this.$t('Common.notice.txSuccess') + rec.transactionHash, 10000])
         })
         .on('error', err => {
           this.notice(['error', this.$t('Common.notice.txError') + (err.message || err), 10000])
