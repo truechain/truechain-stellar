@@ -74,7 +74,7 @@
 
 <script>
 import Vue from 'vue'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 
 import Selector from '@/components/common/function/Selector'
 import SetTxConfig from '@/components/common/function/SetTxConfig'
@@ -168,6 +168,10 @@ export default {
     this.$el.addEventListener('mousewheel', this.onMousewheel)
   },
   methods: {
+    ...mapMutations({
+      'afterTxSend': 'log/afterTxSend',
+      'afterTxReceipt': 'log/afterTxReceipt'
+    }),
     ...mapActions([
       'pushAccountToWallet',
       'notice'
@@ -287,12 +291,15 @@ export default {
           this.notice(['error', this.$t('Common.notice.error') + (err.message || err), 10000])
           return
         }
+        const from = this.txConfig.from
         tx.send(this.txConfig)
           .on('transactionHash', hash => {
+            this.afterTxSend({ hash, from })
             this.notice(['log', this.$t('Common.notice.afterSend') + hash, 10000])
           })
-          .on('receipt', res => {
-            this.notice(['log', this.$t('Common.notice.txSuccess') + res.transactionHash, 10000])
+          .on('receipt', rec => {
+            this.afterTxReceipt(rec)
+            this.notice(['log', this.$t('Common.notice.txSuccess') + rec.transactionHash, 10000])
           })
           .on('error', err => {
             this.notice(['error', this.$t('Common.notice.txError') + (err.message || err), 10000])

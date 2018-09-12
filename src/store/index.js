@@ -4,6 +4,7 @@ import Web3 from 'web3'
 
 import accounts from './modules/accounts'
 import eth from './modules/eth'
+import log from './modules/log'
 import networkSet from 'static/network.json'
 
 Vue.use(Vuex)
@@ -79,7 +80,8 @@ export default new Vuex.Store({
   actions,
   modules: {
     accounts,
-    eth
+    eth,
+    log
   },
   strict: debug
 })
