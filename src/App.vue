@@ -48,7 +48,9 @@
           <span @click.stop="goBack">{{ $t('App.back') }}</span>
         </div>
       </div>
-      <router-view ref="view" v-if="!beforeRefresh" @routerinit="initRouterEl"/>
+      <keep-alive>
+        <router-view ref="view" v-if="!beforeRefresh" @routerinit="initRouterEl"/>
+      </keep-alive>
     </div>
     <div id="tc-mask" v-if="accountsDialogIsOpen">
       <div class="tc-mask-box">

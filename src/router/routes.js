@@ -2,7 +2,7 @@
 import Deploy from '@/components/Deploy'
 import Interact from '@/components/Interact'
 import Transfer from '@/components/Transfer'
-import Chain from '@/components/Chain'
+// import Chain from '@/components/Chain'
 import Log from '@/components/Log'
 
 export default [
@@ -26,11 +26,11 @@ export default [
     name: 'Deploy',
     component: Deploy
   },
-  {
-    path: '/chain',
-    name: 'Chain',
-    component: Chain
-  },
+  // {
+  //   path: '/chain',
+  //   name: 'Chain',
+  //   component: Chain
+  // },
   {
     path: '/log',
     name: 'Log',

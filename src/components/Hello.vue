@@ -3,7 +3,7 @@
     <div class="tc-card tc-hello-card">
       <h1>{{ $t('Hello.title') }}</h1>
       <p>{{ $t('Hello.welcome') }}</p>
-      <p>Github: <a class="marked" target="_blank" href="https://github.com/truechain/trueChain-stellar">https://github.com/truechain/trueChain-stellar</a></p>
+      <p>Github: <a class="marked" target="_blank" href="https://github.com/truechain/truechain-stellar">https://github.com/truechain/truechain-stellar</a></p>
     </div>
     <signin-account @done="jumpToHomepage" @pass="jumpToHomepage"></signin-account>
     <create-account></create-account>
