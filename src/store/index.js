@@ -13,7 +13,7 @@ const debug = false
 
 const state = {
   i18n: null,
-  languageTag: 'en',
+  languageTag: 'sc',
   web3: new Web3(networkSet[0].provider),
   providerTag: networkSet[0].tag,
 

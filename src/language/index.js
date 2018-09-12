@@ -7,7 +7,7 @@ import sc from './lib/sc.json'
 Vue.use(VueI18n)
 
 const i18n = new VueI18n({
-  locale: 'en',
+  locale: 'sc',
   messages: {
     en,
     sc
