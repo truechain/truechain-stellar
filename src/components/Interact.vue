@@ -170,7 +170,8 @@ export default {
   methods: {
     ...mapMutations({
       'afterTxSend': 'log/afterTxSend',
-      'afterTxReceipt': 'log/afterTxReceipt'
+      'afterTxReceipt': 'log/afterTxReceipt',
+      'afterTxError': 'log/afterTxError'
     }),
     ...mapActions([
       'pushAccountToWallet',
@@ -292,9 +293,13 @@ export default {
           return
         }
         const from = this.txConfig.from
+        const to = this.focusContract.options.address
+        const value = this.txConfig.value || '0'
+        let txHash = ''
         tx.send(this.txConfig)
           .on('transactionHash', hash => {
-            this.afterTxSend({ hash, from })
+            txHash = hash
+            this.afterTxSend({ hash, from, to, value })
             this.notice(['log', this.$t('Common.notice.afterSend') + hash, 10000])
           })
           .on('receipt', rec => {
@@ -302,6 +307,7 @@ export default {
             this.notice(['log', this.$t('Common.notice.txSuccess') + rec.transactionHash, 10000])
           })
           .on('error', err => {
+            this.afterTxError({ txHash, err })
             this.notice(['error', this.$t('Common.notice.txError') + (err.message || err), 10000])
           })
         this.txConfig = {}

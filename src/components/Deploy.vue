@@ -132,7 +132,8 @@ export default {
   methods: {
     ...mapMutations({
       'afterTxSend': 'log/afterTxSend',
-      'afterTxReceipt': 'log/afterTxReceipt'
+      'afterTxReceipt': 'log/afterTxReceipt',
+      'afterTxError': 'log/afterTxError'
     }),
     ...mapActions([
       'pushAccountToWallet',
@@ -257,8 +258,10 @@ export default {
       }
       this.waitToDeploy = false
       const from = this.deployConfig.from
+      let txHash = ''
       contractDeploy.send(config)
         .on('transactionHash', hash => {
+          txHash = hash
           this.afterTxSend({ hash, from })
           this.notice(['log', this.$t('Common.notice.afterSend') + hash, 10000])
         })
@@ -267,6 +270,7 @@ export default {
           this.notice(['log', this.$t('Common.notice.txSuccess') + rec.transactionHash, 10000])
         })
         .on('error', err => {
+          this.afterTxError({ txHash, err })
           this.notice(['error', this.$t('Common.notice.txError') + (err.message || err), 10000])
         })
     }
