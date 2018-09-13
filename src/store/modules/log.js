@@ -3,6 +3,7 @@ class BaseTxObj {
     this.id = txData.hash
     this.from = txData.from
     this.sendTime = time
+    this.height = -1
 
     this.finished = false
     this.receiptTime = 0
@@ -13,10 +14,10 @@ class BaseTxObj {
     this.receiptTime = time
     this.error = error
   }
-  onSuccess (time, _) {
-    console.log('success')
+  onSuccess (time, txRecept) {
     this.finished = true
     this.receiptTime = time
+    this.height = txRecept.blockNumber
   }
 }
 
@@ -38,6 +39,7 @@ class ContractTxObj extends BaseTxObj {
     this.finished = true
     this.receiptTime = time
     this.contract = txRecept.contractAddress
+    this.height = txRecept.blockNumber
   }
 }
 
@@ -50,10 +52,10 @@ const mutations = {
     const time = new Date()
     if (txData.to) {
       const transferTxObj = new TransferTxObj(time, txData)
-      state.logs.push(transferTxObj)
+      state.logs.unshift(transferTxObj)
     } else {
       const contractTxObj = new ContractTxObj(time, txData)
-      state.logs.push(contractTxObj)
+      state.logs.unshift(contractTxObj)
     }
   },
   afterTxReceipt (state, txRecept) {
@@ -62,12 +64,19 @@ const mutations = {
     if (!tx) {
       return
     }
-    console.log(txRecept)
-    if (txRecept.status === false) {
-      tx.onFail(time, true)
-    } else {
+    if (txRecept.status) {
       tx.onSuccess(time, txRecept)
+    } else {
+      tx.onFail(time, true)
     }
+  },
+  afterTxError (state, { txHash, err }) {
+    const time = new Date()
+    const tx = state.logs.find(item => item.id === txHash)
+    if (!tx) {
+      return
+    }
+    tx.onFail(time, err.message || err)
   }
 }
 
