@@ -256,7 +256,7 @@ export default {
         return
       }
       this.waitToDeploy = false
-      const from = this.txConfig.from
+      const from = this.deployConfig.from
       contractDeploy.send(config)
         .on('transactionHash', hash => {
           this.afterTxSend({ hash, from })
