@@ -4,9 +4,9 @@
       <li v-for="(item, key) in logs" :key="key">
         <log-card :data="item" />
       </li>
-      <!-- <li>
+      <li v-if="logs.length === 0">
         <div class="no-data">No Data</div>
-      </li> -->
+      </li>
     </ul>
   </div>
 </template>

@@ -41,6 +41,13 @@
             </ul>
           </div>
         </transition>
+        <div class="tc-new-net">
+          <span>自定义Provider</span>
+          <input type="text" v-model="customProvider" @keydown.enter="inputProvider($event)">
+          <div class="tc-new-net-help">
+            <help notice="仅支持HttpProvider，格式为IP+Port。例如<br>127.0.0.1:8545" :width="300"></help>
+          </div>
+        </div>
         <div class="tc-user-info" @mouseover="setHoverObjIndex(2)">
           {{ $tc('App.account', accountsCount, {count: accountsCount}) }}
         </div>
@@ -66,6 +73,7 @@
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import routes from '@/router/routes.js'
 import Hello from '@/components/Hello'
+import Help from '@/components/common/function/Help'
 import LoadingAnimation from '@/components/common/gui/Loading'
 import SigninAccount from '@/components/common/function/SigninAccount'
 import networkSet from 'static/network.json'
@@ -82,7 +90,8 @@ export default {
       noticeBox: null,
       noticeBoxTimer: 0,
       networkSet,
-      netWorking: true
+      netWorking: true,
+      customProvider: ''
     }
   },
   computed: {
@@ -115,6 +124,22 @@ export default {
       'endAddAccounts',
       'bindNoticeBox'
     ]),
+    inputProvider (e) {
+      e.target.blur()
+      if (/^\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}:\d+$/.test(this.customProvider)) {
+        const ipportArray = this.customProvider.split(/[.:]/)
+        let legal = true
+        for (let i = 0; i < 4; i++) {
+          if (Number(ipportArray[i]) >= 256) {
+            legal = false
+          }
+        }
+        if (ipportArray[4] >= 65536) {
+          legal = false
+        }
+        console.log(legal)
+      }
+    },
     goBack () {
       this.$router.push('/')
     },
@@ -178,6 +203,7 @@ export default {
   },
   components: {
     Hello,
+    Help,
     LoadingAnimation,
     SigninAccount
   }
@@ -283,6 +309,18 @@ nav
     padding 0 20px
     &:nth-child(even)
       background-color #fbfbfb
+.tc-new-net
+  padding 10px
+  display inline-flex
+  span
+    line-height 40px
+    font-size 12px
+    margin-right 10px
+.tc-new-net-help
+  width 40px
+  height 40px
+  position relative
+  z-index 20
 .netlist-enter, .netlist-leave-to
   ul
     transform translate3d(0, -110%, 0)
@@ -345,6 +383,10 @@ nav
   box-sizing border-box
   line-height 20px
   color #fff
+
+@media screen and (max-width 900px)
+  .tc-new-net
+    display none
 
 @keyframes breath
   from
