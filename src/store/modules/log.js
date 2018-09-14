@@ -70,13 +70,13 @@ const mutations = {
       tx.onFail(time, true)
     }
   },
-  afterTxError (state, { txHash, err }) {
+  afterTxError (state, { txHash, errMsg }) {
     const time = new Date()
     const tx = state.logs.find(item => item.id === txHash)
     if (!tx) {
       return
     }
-    tx.onFail(time, err.message || err)
+    tx.onFail(time, errMsg)
   }
 }
 

@@ -36,7 +36,7 @@ contract TestERC20Token {
     address public founder = 0x0;
     uint256 public distributed = 0;
 
-    mapping (address => uint256) public balances;
+    mapping (address => uint256) balances;
     mapping (address => mapping (address => uint256)) allowed;
 
     event Transfer(address indexed _from, address indexed _to, uint256 _value);

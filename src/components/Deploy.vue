@@ -270,8 +270,10 @@ export default {
           this.notice(['log', this.$t('Common.notice.txSuccess') + rec.transactionHash, 10000])
         })
         .on('error', err => {
-          this.afterTxError({ txHash, err })
-          this.notice(['error', this.$t('Common.notice.txError') + (err.message || err), 10000])
+          let errMsg = (err.message || err).toString()
+          errMsg = errMsg.split(':')[0]
+          this.afterTxError({ txHash, errMsg })
+          this.notice(['error', this.$t('Common.notice.txError') + errMsg, 10000])
         })
     }
   },
