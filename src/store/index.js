@@ -16,7 +16,7 @@ const state = {
   i18n: null,
   languageTag: 'sc',
   web3: new Web3(networkSet[0].provider),
-  providerTag: networkSet[0].tag,
+  provider: networkSet[0],
 
   noticeBoxTimer: 0,
   noticeBox: null
@@ -25,7 +25,7 @@ const state = {
 const mutations = {
   setWeb3Provider (state, config) {
     state.web3 = new Web3(config.provider)
-    state.providerTag = config.tag
+    state.provider = config
   },
   initI18n (state, i18n) {
     state.i18n = i18n

@@ -20,7 +20,8 @@
       "ropsten": "Ropsten",
       "privatenet": "Private Net",
       "localnet": "Local Net",
-      "unknow": "Test Net"
+      "unknow": "Test Net",
+      "custom": "Custom"
     }
   },
   "Transfer": {
