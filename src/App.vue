@@ -49,7 +49,7 @@
             @click="uploadNewProvider">{{ $t('App.custom') }}</span>
           <input type="text" v-model="customProvider">
           <div class="tc-new-net-help">
-            <help notice="仅支持HttpProvider，格式为IP+Port。例如<br>127.0.0.1:8545" :width="300"></help>
+            <help :notice="`${ $t('App.providerNotice') }<br>127.0.0.1:8545`" :width="300"></help>
           </div>
         </div>
         <div class="tc-user-info" @mouseover="setHoverObjIndex(2)">
@@ -282,7 +282,6 @@ nav
     border-bottom solid 4px #fff
   .focus
     padding-bottom 6px
-
 #tc-content
   position relative
   flex auto
@@ -335,7 +334,7 @@ nav
 .tc-new-net
   padding 15px 5px
   display inline-flex
-  span
+  >span
     height 20px
     line-height 20px
     padding 5px

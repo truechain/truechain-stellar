@@ -9,6 +9,7 @@
     "close": "关闭",
     "custom": "自定义Provider",
     "account": "没有激活账户 | 已激活{count}个账户  | 已激活{count}个账户",
+    "providerNotice": "仅支持HttpProvider，格式为IP+Port。例如",
     "router": {
       "Transfer": "转账",
       "Interact": "合约调用",
