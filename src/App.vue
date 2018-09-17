@@ -46,7 +46,7 @@
         </transition>
         <div class="tc-new-net">
           <span :class="{'tc-new-net-button': customProviderLegal}"
-            @click="uploadNewProvider">自定义Provider</span>
+            @click="uploadNewProvider">{{ $t('App.custom') }}</span>
           <input type="text" v-model="customProvider">
           <div class="tc-new-net-help">
             <help notice="仅支持HttpProvider，格式为IP+Port。例如<br>127.0.0.1:8545" :width="300"></help>
@@ -333,7 +333,7 @@ nav
     &:nth-child(even)
       background-color #fbfbfb
 .tc-new-net
-  padding 15px
+  padding 15px 5px
   display inline-flex
   span
     height 20px
@@ -357,7 +357,7 @@ nav
     padding 0 4px
 .tc-new-net-help
   width 40px
-  height 40px
+  height 35px
   position relative
   z-index 20
   margin-top -5px

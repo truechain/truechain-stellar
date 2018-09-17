@@ -2,27 +2,27 @@
   <div class="position-r">
     <div class="tc-card tx-log-card">
       <div class="tx-log-title">
-        交易 {{data.id}}
-        <span class="tx-log-time">{{sendTimeAb}}</span>
+        {{$t('Common.transaction')}} {{ data.id }}
+        <span class="tx-log-time">{{ sendTimeAb }}</span>
       </div>
       <hr>
       <div class="tx-log-content">
-        <div><span>form</span>{{data.from}}</div>
-        <div><span>value</span>{{data.value}}</div>
-        <div><span>to</span>{{data.to}}</div>
+        <div><span>form</span>{{ data.from }}</div>
+        <div><span>value</span>{{ data.value }}</div>
+        <div><span>to</span>{{ data.to }}</div>
       </div>
     </div>
     <div v-if="data.error" class="b-error tx-log-result">
-      <span>交易失败</span>
-      <span>{{data.error}}</span>
-      <span class="tx-log-time">{{receiptTimeAb}}</span>
+      <span>{{ $t('Common.logs.txError') }}</span>
+      <span>{{ data.error }}</span>
+      <span class="tx-log-time">{{ receiptTimeAb }}</span>
     </div>
     <div v-else-if="data.finished" class="b-normal tx-log-result">
-      <span>交易成功</span>
-      <span>区块高度 {{data.height}}</span>
-      <span class="tx-log-time">{{receiptTimeAb}}</span>
+      <span class="margin-right-1em">{{ $t('Common.logs.txSuccess') }}</span>
+      <span>{{ $t('Common.logs.blockHeight') }} {{ data.height }}</span>
+      <span class="tx-log-time">{{ receiptTimeAb }}</span>
     </div>
-    <div v-else class="b-default tx-log-result">等待中</div>
+    <div v-else class="b-default tx-log-result">{{ $t('Common.waiting') }}...</div>
   </div>
 </template>
 

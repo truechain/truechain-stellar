@@ -7,6 +7,7 @@
   "App": {
     "back": "返回首页",
     "close": "关闭",
+    "custom": "自定义Provider",
     "account": "没有激活账户 | 已激活{count}个账户  | 已激活{count}个账户",
     "router": {
       "Transfer": "转账",
@@ -20,8 +21,7 @@
       "ropsten": "Ropsten",
       "privatenet": "私有网络",
       "localnet": "本地网络",
-      "unknow": "测试网络",
-      "custom": "自定义"
+      "unknow": "测试网络"
     }
   },
   "Transfer": {
@@ -71,6 +71,7 @@
     "gasTooHigh": "燃气费设置过高"
   },
   "Common": {
+    "transaction": "交易",
     "password": "密码",
     "repeat": "重复密码",
     "decrypt": "解码",
@@ -81,6 +82,7 @@
     "txInfo": {
       "base": "交易信息"
     },
+    "waiting": "等待中",
     "resize": "还原窗口大小",
     "notice": {
       "error": "错误 ",
@@ -95,6 +97,13 @@
       "txSuccess": "交易成功 交易ID：",
       "compileError": "编译失败 ",
       "compileSuccess": "编译成功"
+    },
+    "logs": {
+      "txError": "交易失败",
+      "txSuccess": "交易成功",
+      "blockHeight": "区块高度",
+      "contractCreation": "合约创建",
+      "contractAddress": "合约地址"
     }
   }
 }
