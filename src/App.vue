@@ -25,31 +25,35 @@
         'tc-user-hide': $route.name === null,
         'tc-user-ctrl-open': hoverNav === 2
       }">
-        <div class="tc-user-net" :class="{ 'tc-user-net-hover': hoverNav === 1 }" @mouseenter="setHoverObjIndex(1)">
-          {{ $t(`App.network.${providerTag}`) }}
+        <div class="tc-user-net"
+          :class="{ 'tc-user-net-hover': hoverNav === 1 }"
+          :style="{ 'font-size': provider.tag ? '16px' : '14px' }"
+          @mouseenter="setHoverObjIndex(1)">
+          {{ provider.tag ? $t(`App.network.${provider.tag}`) : provider.name }}
         </div>
         <div class="tc-user-netstatus" :style="{ 'background-color': netWorking ? '#009000' : '#d41400' }" />
         <transition name="netlist" :duration="400">
           <div class="tc-user-netlist" v-if="hoverNav === 1">
             <ul>
               <li
-                v-for="(item,index) in networkSet"
-                :key="index"
+                v-for="(item,index) in networkSet" :key="index"
+                :style="{ 'font-size': item.tag ? '16px' : '14px' }"
                 @click="changeNetWork(index)">
-                {{ $t(`App.network.${item.tag}`) }}
+                {{ item.tag ? $t(`App.network.${item.tag}`) : item.name }}
               </li>
             </ul>
           </div>
         </transition>
         <div class="tc-new-net">
-          <span>自定义Provider</span>
-          <input type="text" v-model="customProvider" @keydown.enter="inputProvider($event)">
+          <span :class="{'tc-new-net-button': customProviderLegal}"
+            @click="uploadNewProvider">自定义Provider</span>
+          <input type="text" v-model="customProvider">
           <div class="tc-new-net-help">
             <help notice="仅支持HttpProvider，格式为IP+Port。例如<br>127.0.0.1:8545" :width="300"></help>
           </div>
         </div>
         <div class="tc-user-info" @mouseover="setHoverObjIndex(2)">
-          {{ $tc('App.account', accountsCount, {count: accountsCount}) }}
+          {{ $tc('App.account', accountsCount, { count: accountsCount }) }}
         </div>
         <div class="tc-user-ctrl">
           <span @click.stop="goBack">{{ $t('App.back') }}</span>
@@ -91,13 +95,14 @@ export default {
       noticeBoxTimer: 0,
       networkSet,
       netWorking: true,
-      customProvider: ''
+      customProvider: '',
+      customProviderLegal: false
     }
   },
   computed: {
     ...mapState({
       languageTag: state => state.languageTag,
-      providerTag: state => state.providerTag,
+      provider: state => state.provider,
       accountsDialogIsOpen: state => state.accounts.accountsDialogIsOpen
     }),
     ...mapGetters([
@@ -108,6 +113,11 @@ export default {
   created () {
     this.update()
     setInterval(this.update, ETH_NETWORK_UPDATE_CYCLE)
+  },
+  watch: {
+    customProvider (value) {
+      this.customProviderLegal = this.checkProviderInput(value)
+    }
   },
   mounted () {
     const noticeBox = this.$el.querySelector('#tc-notice')
@@ -124,9 +134,8 @@ export default {
       'endAddAccounts',
       'bindNoticeBox'
     ]),
-    inputProvider (e) {
-      e.target.blur()
-      if (/^\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}:\d+$/.test(this.customProvider)) {
+    checkProviderInput (provider) {
+      if (/^\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}:\d+$/.test(provider)) {
         const ipportArray = this.customProvider.split(/[.:]/)
         let legal = true
         for (let i = 0; i < 4; i++) {
@@ -137,8 +146,22 @@ export default {
         if (ipportArray[4] >= 65536) {
           legal = false
         }
-        console.log(legal)
+        return legal
+      } else {
+        return false
       }
+    },
+    uploadNewProvider () {
+      if (!this.customProviderLegal) {
+        return
+      }
+      const length = this.networkSet.push({
+        name: this.customProvider,
+        tag: '',
+        provider: 'http://' + this.customProvider
+      })
+      this.customProvider = ''
+      this.changeNetWork(length - 1)
     },
     goBack () {
       this.$router.push('/')
@@ -310,17 +333,34 @@ nav
     &:nth-child(even)
       background-color #fbfbfb
 .tc-new-net
-  padding 10px
+  padding 15px
   display inline-flex
   span
-    line-height 40px
+    height 20px
+    line-height 20px
+    padding 5px
     font-size 12px
-    margin-right 10px
+    margin-right 5px
+    border-radius 3px
+    transition color .4s, background-color .4s, opacity .3s
+  .tc-new-net-button
+    cursor pointer
+    background-color #0d85da
+    color #fff
+    opacity .7
+    &:hover
+      opacity 1
+  input
+    height 30px
+    font-size 14px
+    width 150px
+    padding 0 4px
 .tc-new-net-help
   width 40px
   height 40px
   position relative
   z-index 20
+  margin-top -5px
 .netlist-enter, .netlist-leave-to
   ul
     transform translate3d(0, -110%, 0)

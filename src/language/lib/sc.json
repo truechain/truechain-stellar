@@ -20,7 +20,8 @@
       "ropsten": "Ropsten",
       "privatenet": "私有网络",
       "localnet": "本地网络",
-      "unknow": "测试网络"
+      "unknow": "测试网络",
+      "custom": "自定义"
     }
   },
   "Transfer": {
