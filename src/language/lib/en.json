@@ -9,6 +9,7 @@
     "close": "Close",
     "custom": "Custom Provider",
     "account": "no Accounts in Session | {count} Account in Session | {count} Accounts in Session",
+    "providerNotice": "Only HttpProvider is supported, and the format is IP+ port. E.g",
     "router": {
       "Transfer": "Transfer",
       "Interact": "Interact",
