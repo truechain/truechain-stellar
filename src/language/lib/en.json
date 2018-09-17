@@ -7,6 +7,7 @@
   "App": {
     "back": "Back to Home",
     "close": "Close",
+    "custom": "Custom Provider",
     "account": "no Accounts in Session | {count} Account in Session | {count} Accounts in Session",
     "router": {
       "Transfer": "Transfer",
@@ -20,8 +21,7 @@
       "ropsten": "Ropsten",
       "privatenet": "Private Net",
       "localnet": "Local Net",
-      "unknow": "Test Net",
-      "custom": "Custom"
+      "unknow": "Test Net"
     }
   },
   "Transfer": {
@@ -71,6 +71,7 @@
     "gasTooHigh": "Gas price set too high"
   },
   "Common": {
+    "transaction": "Transaction",
     "password": "Password",
     "repeat": "Repeat",
     "decrypt": "Decrypt",
@@ -81,6 +82,7 @@
     "txInfo": {
       "base": "Tx Info"
     },
+    "waiting": "waiting",
     "resize": "resize",
     "notice": {
       "error": "Error ",
@@ -95,6 +97,13 @@
       "txSuccess": "Transaction succeed, ID: ",
       "compileError": "Compile failed ",
       "compileSuccess": "Compile succeed"
+    },
+    "logs": {
+      "txError": "Transaction failed",
+      "txSuccess": "Transaction succeed",
+      "blockHeight": "Block Height",
+      "contractCreation": "Contract Creation",
+      "contractAddress": "Contract Address"
     }
   }
 }
