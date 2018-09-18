@@ -26,27 +26,24 @@ node server/index.js
 ```
 
 ```
-├── server                          =>  编译合约服务
-├── src                             =>
-│   ├── App.vue                     =>  入口文件
-│   ├── api-config                  =>
-│   │   └── index.js                =>
-│   ├── components                  =>
-│   │   ├── Chain.vue               =>
-│   │   ├── Deploy.vue              =>  部署
-│   │   ├── Hello.vue               =>  你好
-│   │   ├── Interact.vue            =>
-│   │   ├── Log.vue                 =>  日志
-│   │   ├── Transfer.vue            =>  交易
-│   │   └── common                  =>  通用
+├── server                          =>  合约编译服务
+├── src
+│   ├── App.vue                     =>  入口组件
+│   ├── api-config
+│   │   └── index.js                =>  合约编译服务配置
+│   ├── components
+│   │   ├── Deploy.vue              =>  合约部署页面
+│   │   ├── Hello.vue               =>  欢迎页面
+│   │   ├── Interact.vue            =>  合约调用页面
+│   │   ├── Log.vue                 =>  交易日志页面
+│   │   ├── Transfer.vue            =>  转账页面
+│   │   └── common                  =>  通用组件
 │   ├── language                    =>  全球化配置
 │   ├── main.js                     =>  入口文件
 │   ├── router                      =>  路由配置
 │   ├── store                       =>  vuex
 │   └── style.styl                  =>  样式初始化
-└── static                          =>
-    ├── ERC20.sol                   =>
-    ├── contracts.json              =>
-    ├── network.json                =>
-    └── simple.sol                  =>
+└── static
+    ├── contracts.json              =>  默认合约配置
+    └── network.json                =>  默认网络配置
 ```
