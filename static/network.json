@@ -3,5 +3,10 @@
     "name": "Local Net",
     "tag": "localnet",
     "provider": "http://127.0.0.1:8545"
+  },
+  {
+    "name": "Private Net",
+    "tag": "privatenet",
+    "provider": "http://39.105.126.32:8544"
   }
 ]
