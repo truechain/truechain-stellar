@@ -2,11 +2,19 @@
   {
     "name": "Local Net",
     "tag": "localnet",
-    "provider": "http://127.0.0.1:8545"
+    "provider": "http://127.0.0.1:8545",
+    "type": "etrue"
   },
   {
     "name": "Private Net",
     "tag": "privatenet",
-    "provider": "http://39.105.126.32:8544"
+    "provider": "http://39.105.126.32:8544",
+    "type": "etrue"
+  },
+  {
+    "name": "ETH",
+    "tag": "mainnet",
+    "provider": "https://mainnet.infura.io/",
+    "type": "eth"
   }
 ]
