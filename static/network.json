@@ -1,5 +1,11 @@
 [
   {
+    "name": "True Beta",
+    "tag": "beta",
+    "provider": "https://www.truescan.net/rpc/",
+    "type": "etrue"
+  },
+  {
     "name": "Local Net",
     "tag": "localnet",
     "provider": "http://127.0.0.1:8545",
