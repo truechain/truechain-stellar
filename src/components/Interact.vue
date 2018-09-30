@@ -82,6 +82,7 @@ import contracts from 'static/contracts.json'
 
 import InputAddress from '@/components/common/gui/InputAddress'
 import InputUint from '@/components/common/gui/InputUint'
+import InputString from '@/components/common/gui/InputString'
 
 const contractNames = contracts.map(contract => {
   return contract.name
@@ -96,6 +97,8 @@ const InterfaceData = Vue.component('interface-data', {
           return InputAddress
         case /uint/.test(type):
           return InputUint
+        case /string/.test(type):
+          return InputString
         default:
           return InputAddress
       }
