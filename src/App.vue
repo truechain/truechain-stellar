@@ -2,18 +2,16 @@
   <div id="tc-app">
     <nav :class="{'tc-nav-login': $route.name === null}">
       <img class="tc-nav-logo" src="./assets/logo.png" alt="logo" height="60">
-      <transition name="fly-right">
-        <div style="position: absolute; width: 100%;" v-if="$route.name !== null">
-          <div
-            class="tc-nav-title"
-            v-for="item in routes"
-            :key="routes.indexOf(item)"
-            :class="{'tc-nav-title-focus': $route.name === item.name}"
-            @click="$router.push(item.path)">
-            {{ $t(`App.router.${item.name}`) }}
-          </div>
+      <div style="position: absolute; width: 100%;">
+        <div
+          class="tc-nav-title"
+          v-for="item in routes"
+          :key="routes.indexOf(item)"
+          :class="{'tc-nav-title-focus': $route.name === item.name}"
+          @click="$router.push(item.path)">
+          {{ $t(`App.router.${item.name}`) }}
         </div>
-      </transition>
+      </div>
       <div class="tc-nav-lang">
         <span :class="{'focus': languageTag === 'en'}" @click="setLanguage('en')">English</span>
         <span :class="{'focus': languageTag === 'sc'}" @click="setLanguage('sc')">简体中文</span>
@@ -433,10 +431,10 @@ nav
   to
     opacity .6
 
-.fly-right-enter-active, .fly-right-leave-active
-  transition transform 1s
-.fly-right-enter, .fly-right-leave-to
-  transform translateX(100%)
+// .fly-right-enter-active, .fly-right-leave-active
+//   transition transform 1s
+// .fly-right-enter, .fly-right-leave-to
+//   transform translateX(100%)
 
 .fly-left-enter-active, .fly-left-leave-active
   transition transform 1s, opacity 1s

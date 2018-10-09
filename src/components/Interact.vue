@@ -45,7 +45,7 @@
             v-for="(item, index) in inputInterfaceData"
             :key="index">
             <span>{{item.name.slice(1)}}</span>
-            <interface-data
+            <interface-input
               :index="index"
               :type="item.type"
               :isCorrect.sync="item.isCorrect"
@@ -73,39 +73,16 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 import Selector from '@/components/common/function/Selector'
 import SetTxConfig from '@/components/common/function/SetTxConfig'
 import contracts from 'static/contracts.json'
 
-import InputAddress from '@/components/common/gui/InputAddress'
-import InputUint from '@/components/common/gui/InputUint'
-import InputString from '@/components/common/gui/InputString'
+import InterfaceInput from '@/components/common/gui/InterfaceInput'
 
 const contractNames = contracts.map(contract => {
   return contract.name
-})
-
-const InterfaceData = Vue.component('interface-data', {
-  functional: true,
-  render (createElement, context) {
-    function getComponent (type) {
-      switch (true) {
-        case /address/.test(type):
-          return InputAddress
-        case /uint/.test(type):
-          return InputUint
-        case /string/.test(type):
-          return InputString
-        default:
-          return InputAddress
-      }
-    }
-    const component = getComponent(context.props.type)
-    return createElement(component, context.data)
-  }
 })
 
 export default {
@@ -240,7 +217,8 @@ export default {
         .estimateGas()
         .then(this.setComputedGas)
         .catch(err => {
-          this.notice(['warn', this.$t('Common.notice.warn') + (err.message || err), 10000])
+          // this.notice(['warn', this.$t('Common.notice.warn') + (err.message || err), 10000])
+          console.warn(err.message || err)
         })
     },
     onNext (options) {
@@ -322,7 +300,7 @@ export default {
   components: {
     Selector,
     SetTxConfig,
-    InterfaceData
+    InterfaceInput
   }
 }
 </script>

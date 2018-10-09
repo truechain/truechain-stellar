@@ -42,20 +42,39 @@
         <div class="code-box">
           <p>{{ $t('Deploy.compiled') }}</p>
           <textarea class="code"
+            :class="{
+              'input-active': !needCompile,
+              'input-error': compiledCode && !legalCode
+            }"
             :disabled="needCompile"
             v-model="compiledCode">
           </textarea>
           <p>{{ $t('Deploy.interface') }}</p>
           <textarea class="code"
+            :class="{
+              'input-active': !needCompile,
+              'input-error': interfaceJSON && !legalABI
+            }"
             :disabled="needCompile"
             v-model="interfaceJSON">
           </textarea>
         </div>
       </div>
       <hr>
+      <div class="deploy-cons" v-if="conInputs">
+        <p>构造函数</p>
+        <div v-for="(item, index) in conInputs" :key="index">
+          <span class="label">{{item.name}}</span>
+          <interface-input class="input"
+            :index="index"
+            :type="item.type"
+            :isCorrect.sync="item.isCorrect" />
+        </div>
+        <div class="clear"></div>
+      </div>
       <div class="form-deploy">
         <set-tx-config
-          :active="compiledCode && interfaceJSON"
+          :active="legalCode && legalABI"
           :computedGas="computedGas"
           @next="onNext">
         </set-tx-config>
@@ -80,6 +99,23 @@ import AnimLoading from '@/components/common/gui/Loading'
 import Selector from '@/components/common/function/Selector'
 import SetTxConfig from '@/components/common/function/SetTxConfig'
 
+import InterfaceInput from '@/components/common/gui/InterfaceInput'
+
+const debounce = (func, delay) => {
+  if (typeof func !== 'function') {
+    return func
+  }
+  delay = delay || 0
+  let timer = 0
+  const debouncedFunc = function () {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      func.apply(this, arguments)
+    }, delay)
+  }
+  return debouncedFunc
+}
+
 export default {
   name: 'Deploy',
   data () {
@@ -90,8 +126,12 @@ export default {
       defaultContractName: '',
       sourceCode: '',
       compiledCode: '',
+      legalCode: false,
       interfaceJSON: '',
+      legalABI: false,
       isCompiling: false,
+      conInputs: null,
+
       deployConfig: {},
       computedGas: 0,
       deployTxInfo: this.$t('Common.txInfo.base'),
@@ -108,18 +148,14 @@ export default {
   },
   watch: {
     compiledCode (newValue) {
-      if (!newValue) {
-        return
+      if (newValue) {
+        this.legalCode = true
+        this.dUpdateComputedGas(newValue)
       }
-      const contract = new this.web3.eth.Contract([])
-      contract.deploy({data: '0x' + newValue})
-        .estimateGas()
-        .then(res => {
-          this.computedGas = res
-        }).catch(err => {
-          this.computedGas = ''
-          this.notice(['warn', this.$t('Common.notice.warn') + (err.message || err), 10000])
-        })
+    },
+    interfaceJSON (newValue) {
+      this.legalABI = true
+      this.dUpdateInterface(newValue)
     }
   },
   created () {
@@ -155,6 +191,48 @@ export default {
         ta.style.height = ''
       }
     },
+    dUpdateComputedGas: debounce(function (code) {
+      const contract = new this.web3.eth.Contract([])
+      if (/[^0-9a-fA-F]/.test(code) || code.length % 2) {
+        this.legalCode = false
+        return
+      }
+      this.legalCode = true
+      contract.deploy({data: '0x' + code})
+        .estimateGas()
+        .then(res => {
+          this.computedGas = res
+        }).catch(err => {
+          this.computedGas = ''
+          // this.notice(['warn', this.$t('Common.notice.warn') + (err.message || err), 10000])
+          console.warn(err.message || err)
+        })
+    }, 500),
+    dUpdateInterface: debounce(function (json) {
+      let interfaceObj = null
+      this.conInputs = null
+      try {
+        interfaceObj = JSON.parse(json)
+      } catch (err) {
+        this.legalABI = false
+        return
+      }
+      if (interfaceObj.constructor.name === 'Array') {
+        this.legalABI = true
+        const contractCon = interfaceObj.find(func => func.type && func.type === 'constructor')
+        if (contractCon && contractCon.inputs && contractCon.inputs.length > 0) {
+          this.conInputs = contractCon.inputs.map(item => {
+            return {
+              name: item.name || 'unnamed',
+              type: item.type || 'unknow',
+              isCorrect: false
+            }
+          })
+        }
+      } else {
+        this.legalABI = false
+      }
+    }, 500),
     queryCompile () {
       if (this.isCompiling) {
         return
@@ -281,7 +359,8 @@ export default {
     IconCompile,
     AnimLoading,
     Selector,
-    SetTxConfig
+    SetTxConfig,
+    InterfaceInput
   }
 }
 </script>
@@ -375,9 +454,17 @@ export default {
     flex 1 0 200px
     textarea
       height 130px
-.input-active
-  border-color #0d85da
-  // box-shadow 0 0 6px #0d85da66
+
+.deploy-cons
+  .label
+    display block
+    float left
+    width 100px
+    line-height 40px
+  .input
+    float left
+    width calc(100% - 100px)
+  margin-bottom 20px
 
 .form-deploy
   margin-top -20px
