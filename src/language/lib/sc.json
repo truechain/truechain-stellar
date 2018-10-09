@@ -45,7 +45,8 @@
     "solSourceCode": "Solidity源代码",
     "compiled": "二进制代码",
     "interface": "接口JSON",
-    "compile": "编译"
+    "compile": "编译",
+    "constructor": "构造函数"
   },
   "CreateAccount": {
     "title": "创建新账户",
