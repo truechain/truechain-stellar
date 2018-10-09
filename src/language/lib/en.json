@@ -45,7 +45,8 @@
     "solSourceCode": "Solidity Source Code",
     "compiled": "Compiled Code",
     "interface": "Interface JSON",
-    "compile": "Compile"
+    "compile": "Compile",
+    "constructor": "Constructor"
   },
   "CreateAccount": {
     "title": "Create new Account",

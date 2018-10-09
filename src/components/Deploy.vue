@@ -62,13 +62,14 @@
       </div>
       <hr>
       <div class="deploy-cons" v-if="conInputs">
-        <p>构造函数</p>
+        <p>{{ $t('Deploy.constructor') }}</p>
         <div v-for="(item, index) in conInputs" :key="index">
           <span class="label">{{item.name}}</span>
           <interface-input class="input"
             :index="index"
             :type="item.type"
-            :isCorrect.sync="item.isCorrect" />
+            :isCorrect.sync="item.isCorrect"
+            @pushData="pushData" />
         </div>
         <div class="clear"></div>
       </div>
@@ -225,7 +226,8 @@ export default {
             return {
               name: item.name || 'unnamed',
               type: item.type || 'unknow',
-              isCorrect: false
+              isCorrect: false,
+              value: undefined
             }
           })
         }
@@ -233,6 +235,9 @@ export default {
         this.legalABI = false
       }
     }, 500),
+    pushData (index, value) {
+      this.conInputs[index].value = value
+    },
     queryCompile () {
       if (this.isCompiling) {
         return
@@ -317,9 +322,13 @@ export default {
         return
       }
       const newContract = new this.web3.eth.Contract(interfaceObj)
+      let argus = []
+      if (this.conInputs) {
+        argus = this.conInputs.map(item => item.value)
+      }
       const options = {
         data: '0x' + this.compiledCode,
-        arguments: []
+        arguments: argus
       }
       const contractDeploy = newContract.deploy(options)
       const config = {
@@ -456,6 +465,8 @@ export default {
       height 130px
 
 .deploy-cons
+  p
+    line-height 30px
   .label
     display block
     float left
