@@ -2,7 +2,7 @@
   {
     "name": "True Beta",
     "tag": "beta",
-    "provider": "https://www.truescan.net/rpc/",
+    "provider": "https://api.truescan.net/rpc/",
     "type": "etrue"
   },
   {
