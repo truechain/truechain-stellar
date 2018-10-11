@@ -11,11 +11,13 @@ Vue.use(Vuex)
 
 // const debug = process.env.NODE_ENV !== 'production'
 const debug = false
+const web3 = new Web3(networkSet[0].provider, networkSet[0].type)
+window.web3 = web3
 
 const state = {
   i18n: null,
   languageTag: 'sc',
-  web3: new Web3(networkSet[0].provider, networkSet[0].type),
+  web3,
   provider: networkSet[0],
 
   noticeBoxTimer: 0,
