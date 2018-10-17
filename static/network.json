@@ -22,5 +22,11 @@
     "tag": "mainnet",
     "provider": "https://mainnet.infura.io/",
     "type": "eth"
+  },
+  {
+    "name": "Local ETH",
+    "tag": "ethlocalnet",
+    "provider": "http://127.0.0.1:8545",
+    "type": "eth"
   }
 ]

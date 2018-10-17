@@ -23,6 +23,7 @@
       "ropsten": "Ropsten",
       "privatenet": "私有网络",
       "localnet": "本地网络",
+      "ethlocalnet": "本地ETH网络",
       "unknow": "测试网络"
     }
   },

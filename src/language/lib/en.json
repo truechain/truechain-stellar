@@ -23,6 +23,7 @@
       "ropsten": "Ropsten",
       "privatenet": "Private Net",
       "localnet": "Local Net",
+      "ethlocalnet": "Local ETH Net",
       "unknow": "Test Net"
     }
   },
