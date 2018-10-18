@@ -44,7 +44,7 @@
             class="input-data-boxs"
             v-for="(item, index) in inputInterfaceData"
             :key="index">
-            <span>{{item.name.slice(1)}}</span>
+            <span>{{item.name}}</span>
             <interface-input
               :index="index"
               :type="item.type"
