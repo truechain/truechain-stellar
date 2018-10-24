@@ -144,8 +144,15 @@ export default {
     this.$emit('routerinit', this)
   },
   mounted () {
+    const query = this.$route.query
+    this.updateContractByQuery(query)
     this.height = this.$el.getBoundingClientRect().height
     this.$el.addEventListener('mousewheel', this.onMousewheel)
+  },
+  beforeRouteUpdate (newRoute, _, next) {
+    const query = newRoute.query
+    this.updateContractByQuery(query)
+    next()
   },
   methods: {
     ...mapMutations({
@@ -159,6 +166,18 @@ export default {
     ]),
     setComputedGas (value) {
       this.computedGas = value
+    },
+    updateContractByQuery (query) {
+      this.contract.address = ''
+      this.contract.interface = ''
+      this.interfacesList = []
+      if (query.hasOwnProperty('ERC20')) {
+        const ERC20Config = contracts.find(c => c.name === 'ERC20') || { interface: [] }
+        const abi = ERC20Config.interface
+        this.contract.address = query['ERC20']
+        this.contract.interface = JSON.stringify(abi)
+        this.checkInterfaceInput(undefined, abi)
+      }
     },
     selectContract (name, isDefaultOption) {
       if (isDefaultOption) {
