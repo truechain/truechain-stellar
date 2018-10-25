@@ -21,7 +21,9 @@ const state = {
   provider: networkSet[0],
 
   noticeBoxTimer: 0,
-  noticeBox: null
+  noticeBox: null,
+  noticeTextBox: null,
+  hold: false
 }
 
 const mutations = {
@@ -38,12 +40,24 @@ const mutations = {
   },
   bindNoticeBox (state, el) {
     state.noticeBox = el
+    state.noticeTextBox = el.querySelector('p')
+  },
+  holdNoticeBox (state, hold) {
+    state.hold = hold
+    if (!state.noticeBoxTimer && !hold) {
+      state.noticeBox.style.transform = 'translateY(110%)'
+    }
+  },
+  closeNoticeBox (state) {
+    state.noticeBox.style.transform = 'translateY(110%)'
+    state.noticeBoxTimer = 0
   }
 }
 
 const actions = {
   notice ({ state }, [color, text, time]) {
-    let el = state.noticeBox
+    const el = state.noticeBox
+    const tel = state.noticeTextBox
     if (!el) {
       return
     }
@@ -65,12 +79,14 @@ const actions = {
     }
     el.style.transform = 'translateY(110%)'
     el.style.backgroundColor = color
-    el.innerText = text
+    tel.innerText = text
     setTimeout(() => {
       el.style.transform = 'translateY(0%)'
     }, delay)
     state.noticeBoxTimer = setTimeout(() => {
-      el.style.transform = 'translateY(110%)'
+      if (!state.hold) {
+        el.style.transform = 'translateY(110%)'
+      }
       state.noticeBoxTimer = 0
     }, delay + time)
   }

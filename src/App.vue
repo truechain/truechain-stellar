@@ -67,7 +67,10 @@
         <signin-account @done="endAddAccounts" @pass="endAddAccounts"></signin-account>
       </div>
     </div>
-    <div id="tc-notice"></div>
+    <div id="tc-notice" @mouseover="holdNotice" @mouseout="releaseNotice">
+      <p />
+      <span class="tc-notice-close" @click="closeNotice">X</span>
+    </div>
   </div>
 </template>
 
@@ -130,8 +133,19 @@ export default {
       'setWeb3Provider',
       'setLanguage',
       'endAddAccounts',
-      'bindNoticeBox'
+      'bindNoticeBox',
+      'holdNoticeBox',
+      'closeNoticeBox'
     ]),
+    holdNotice () {
+      this.holdNoticeBox(true)
+    },
+    releaseNotice () {
+      this.holdNoticeBox(false)
+    },
+    closeNotice () {
+      this.closeNoticeBox()
+    },
     checkProviderInput (provider) {
       if (/^\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}:\d+$/.test(provider)) {
         const ipportArray = this.customProvider.split(/[.:]/)
@@ -414,12 +428,21 @@ nav
   left 0
   z-index 20
   box-shadow 0px -4px 4px #0001
-  transition transform .6s
+  transition transform .6s, opacity .3s
   transform translateY(110%)
   padding 20px
   box-sizing border-box
   line-height 20px
   color #fff
+  opacity .9
+  &:hover
+    opacity 1
+.tc-notice-close
+  position absolute
+  top 50%
+  right 20px
+  transform translateY(-50%)
+  cursor pointer
 
 @media screen and (max-width 900px)
   .tc-new-net
