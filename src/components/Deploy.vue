@@ -10,6 +10,7 @@
         </div>
         <span class="resize" @click="resizeTextarea">{{ $t('Common.resize') }}</span>
       </div>
+      <div class="clear"></div>
       <div class="code-input">
         <div v-if="needCompile" class="source-box">
           <p>{{ $t('Deploy.solSourceCode') }}</p>

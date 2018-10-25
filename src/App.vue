@@ -254,7 +254,6 @@ export default {
   display flex
 nav
   color #fff
-  width 200px
   height 100vh
   flex 0 0 200px
   background-color #014676
@@ -447,6 +446,8 @@ nav
 @media screen and (max-width 900px)
   .tc-new-net
     display none
+  nav
+    flex 0 0 130px
 
 @keyframes breath
   from
