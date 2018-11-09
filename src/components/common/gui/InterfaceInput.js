@@ -3,6 +3,7 @@ import Vue from 'vue'
 import InputAddress from '@/components/common/gui/InputAddress'
 import InputUint from '@/components/common/gui/InputUint'
 import InputString from '@/components/common/gui/InputString'
+import InputAny from '@/components/common/gui/InputAny'
 
 export default Vue.component('interface-input', {
   functional: true,
@@ -16,7 +17,7 @@ export default Vue.component('interface-input', {
         case /string/.test(type):
           return InputString
         default:
-          return InputAddress
+          return InputAny
       }
     }
     const component = getComponent(context.props.type)

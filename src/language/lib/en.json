@@ -22,7 +22,7 @@
       "mainnet": "ETH Main Net",
       "ropsten": "Ropsten",
       "privatenet": "Private Net",
-      "localnet": "Local Net",
+      "localnet": "Local True Net",
       "ethlocalnet": "Local ETH Net",
       "unknow": "Test Net"
     }
