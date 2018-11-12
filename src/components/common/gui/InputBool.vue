@@ -10,12 +10,8 @@
 </template>
 
 <script>
-import BN from 'bn.js'
-
-window.BN = BN
-
 export default {
-  name: 'InputUint',
+  name: 'InputBool',
   props: ['type', 'index', 'isCorrect'],
   data () {
     return {
@@ -23,31 +19,23 @@ export default {
       isError: false
     }
   },
-  computed: {
-    size () {
-      return parseInt(this.type.match(/int([\d]+)/)[1])
-    }
-  },
   methods: {
     check () {
       if (/\[\]/.test(this.type)) {
         return this.checkAsArray()
       }
-      const num10 = new BN(this.value, 10).toString(10)
-      const num16 = '0x' + new BN(this.value.slice(2), 16).toString(16)
-      const isCorrect = num10 === this.value || num16 === this.value
+      const isCorrect = this.value === 'true' || this.value === 'false'
       this.isError = Boolean(!isCorrect && this.value)
       this.$emit('update:isCorrect', isCorrect)
-      this.$emit('pushData', this.index, this.value)
+      this.$emit('pushData', this.index, this.value === 'true')
     },
     checkAsArray () {
       let values = this.value.split(',')
       let isCorrect = true
       for (let i = 0; i < values.length; i++) {
-        const el = values[i]
-        const num10 = new BN(el, 10).toString(10)
-        const num16 = '0x' + new BN(el.slice(2), 16).toString(16)
-        isCorrect = isCorrect && (num10 === el || num16 === el)
+        const value = values[i]
+        values[i] = value === 'true'
+        isCorrect = isCorrect && (value === 'true' || value === 'false')
         if (!isCorrect) {
           break
         }
