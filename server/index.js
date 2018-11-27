@@ -49,7 +49,22 @@ app.post('/compile', (req, res) => {
   } else {
     useSolc = solc.setupMethods(defaultJSON)
   }
-  const output = useSolc.compile(data.source, 1)
+  const input = {
+    'language': 'Solidity',
+    'settings': {
+      'outputSelection': {
+        '*': {
+          '*': [ 'evm.bytecode.object', 'abi' ]
+        }
+      }
+    },
+    'sources': {
+      'main.sol': {
+        'content': data.source
+      }
+    }
+  }
+  const output = JSON.parse(useSolc.compileStandardWrapper(JSON.stringify(input)))
   if (output.errors) {
     console.warn('Compile error\n')
     for (let i = 0; i < output.errors.length; i++) {
@@ -63,8 +78,9 @@ app.post('/compile', (req, res) => {
       details: output.errors
     })
   }
-  for (var contractName in output.contracts) {
-    console.log(`Contract ${contractName}: ${output.contracts[contractName].bytecode}`)
+  const main = output.contracts['main.sol']
+  for (var contractName in main) {
+    console.log(`Contract ${contractName}: ${main[contractName].evm.bytecode.object}`)
   }
   return res.json(output)
 })
