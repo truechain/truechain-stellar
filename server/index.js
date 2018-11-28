@@ -2,7 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const solc = require('solc')
 
-const v4_2_3 = require('../static/soljson-v0.4.23+commit.124ca40d.js')
+const lowVersion = require('../static/soljson-v0.4.25+commit.59dbf8f1.js')
 
 const app = express()
 app.use(bodyParser.json({ limit: '1mb' }))
@@ -37,11 +37,11 @@ app.post('/compile', (req, res) => {
   }
   const matched = data.source.match(/pragma[\s]+solidity[\s]+\^?0\.([\d]+)\.[\d]+/)
   if (!matched || !matched[1]) {
-    console.warn('Unknow solidity verson')
+    console.warn('Unknow solidity version')
     return res.json({
       error: true,
       from: '[POST /compile]',
-      msg: 'Unknow solidity verson'
+      msg: 'Unknow solidity version'
     })
   }
   const input = {
@@ -61,7 +61,7 @@ app.post('/compile', (req, res) => {
   }
   let output = null
   if (matched[1] < 5) {
-    const useSolc = solc.setupMethods(v4_2_3)
+    const useSolc = solc.setupMethods(lowVersion)
     output = JSON.parse(useSolc.lowlevel.compileStandard(JSON.stringify(input)))
   } else {
     output = JSON.parse(solc.compileStandardWrapper(JSON.stringify(input)))

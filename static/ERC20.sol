@@ -1,4 +1,4 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.5.0;
 
 library SafeMath {
     // function mul(uint256 a, uint256 b) internal pure returns (uint256) {
@@ -33,7 +33,7 @@ contract TestERC20Token {
     string public constant symbol = "TET";
     uint256 public constant decimals = 6;
     uint256 _totalSupply = 100000000 * 10 ** decimals;
-    address public founder = 0x0;
+    address payable public founder = address(0);
     uint256 public distributed = 0;
 
     mapping (address => uint256) balances;
@@ -55,7 +55,7 @@ contract TestERC20Token {
     }
 
     function transfer(address _to, uint256 _value) public returns (bool success) {
-        require (_to != 0x0, "");
+        require (_to != address(0), "");
         require((balances[msg.sender] >= _value), "");
         balances[msg.sender] = balances[msg.sender].sub(_value);
         balances[_to] = balances[_to].add(_value);
@@ -64,7 +64,7 @@ contract TestERC20Token {
     }
 
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
-        require (_to != 0x0, "");
+        require (_to != address(0), "");
         require(balances[_from] >= _value && allowed[_from][msg.sender] >= _value, "");
         balances[_from] = balances[_from].sub(_value);
         balances[_to] = balances[_to].add(_value);
@@ -88,11 +88,11 @@ contract TestERC20Token {
 
         distributed = distributed.add(_amount);
         balances[_to] = balances[_to].add(_amount);
-        emit Transfer(this, _to, _amount);
+        emit Transfer(address(this), _to, _amount);
         return true;
     }
 	
-    function distributeMultiple(address[] _tos, uint256[] _values) public returns (bool success) {
+    function distributeMultiple(address[] memory _tos, uint256[] memory _values) public returns (bool success) {
         require(msg.sender == founder, "");
 		
         uint256 total = 0;
@@ -106,13 +106,13 @@ contract TestERC20Token {
         for (i = 0; i < _tos.length; i++) {
             distributed = distributed.add(_values[i]);
             balances[_tos[i]] = balances[_tos[i]].add(_values[i]);
-            emit Transfer(this, _tos[i], _values[i]);
+            emit Transfer(address(this), _tos[i], _values[i]);
         }
 
         return true;
     }
 
-    function changeFounder(address newFounder) public {
+    function changeFounder(address payable newFounder) public {
         require(msg.sender == founder, "");
 
         founder = newFounder;

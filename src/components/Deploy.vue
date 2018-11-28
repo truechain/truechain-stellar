@@ -254,15 +254,20 @@ export default {
         if (data.error) {
           this.notice(['error', this.$t('Common.notice.compileError'), 10000])
           if (data.details) {
-            console.log('%c' + data.details.join('\n\n'), 'color: red;')
+            console.log('%c' + data.details.reduce(
+              (res, curr) => res + curr.formattedMessage + '\n',
+              ''
+            ), 'color: red;')
           }
         } else {
-          for (const contractName in data.contracts) {
-            const contract = data.contracts[contractName]
-            const name = contractName.slice(1)
+          const main = data.contracts['main.sol']
+          // default result is set in main.sol
+          for (const contractName in main) {
+            const contract = main[contractName]
+            const name = contractName
             this.contracts[name] = {
-              bytecode: contract.bytecode,
-              interface: contract.interface
+              bytecode: contract.evm.bytecode.object,
+              interface: JSON.stringify(contract.abi)
             }
             this.contractsName.push(name)
           }
