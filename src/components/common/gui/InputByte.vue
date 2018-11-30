@@ -38,13 +38,13 @@ export default {
       let isCorrect = true
       if (matching) {
         const l = matching[1].length
-        isCorrect = l % 2 === 0 && l / 2 < this.size
+        isCorrect = l % 2 === 0 && l / 2 <= this.size
       } else {
         isCorrect = false
       }
       this.isError = Boolean(!isCorrect && this.value)
       this.$emit('update:isCorrect', isCorrect)
-      this.$emit('pushData', this.index, this.value === 'true')
+      this.$emit('pushData', this.index, this.value)
     },
     checkAsArray () {
       let values = this.value.split(',')
@@ -54,7 +54,7 @@ export default {
         const matching = value.match(/^0x([a-f,A-F,0-9]*$)/)
         if (matching) {
           const l = matching[1].length
-          isCorrect = l % 2 === 0 && l / 2 < this.size
+          isCorrect = l % 2 === 0 && l / 2 <= this.size
         } else {
           isCorrect = false
         }
