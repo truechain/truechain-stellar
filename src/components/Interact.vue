@@ -17,6 +17,7 @@
             :class="{'input-active': !haveSelectedContract}"
             :disabled="haveSelectedContract"
             v-model="contract.address"
+            @change="estimateGas"
             type="text">
         </div>
         <div class="clear"></div>
@@ -40,6 +41,14 @@
             :options="interfaceNames"
             @change="selectInterface">
           </selector>
+          <div class="input-value-boxs" v-if="focusInterfacePaybale">
+            <span>Pay value (wei)</span>
+            <interface-input
+              :index="-1"
+              type="uint256"
+              :isCorrect.sync="payIsCorrect"
+              @pushData="pushData" />
+          </div>
           <div
             class="input-data-boxs"
             v-for="(item, index) in inputInterfaceData"
@@ -54,7 +63,7 @@
         </div>
         <div class="right-part" v-if="focusInterface.constant === false">
           <set-tx-config
-            :active="true"
+            :active="!focusInterfacePaybale || payIsCorrect"
             :computedGas="computedGas"
             @next="onNext">
           </set-tx-config>
@@ -85,6 +94,21 @@ const contractNames = contracts.map(contract => {
   return contract.name
 })
 
+function genDefaultInputs (inputs) {
+  return inputs.map(input => {
+    switch (true) {
+      case /int/.test(input.type):
+        return '0'
+      case /address/.test(input.type):
+        return '0x0000000000000000000000000000000000000000'
+      case /bool/.test(input.type):
+        return false
+      default:
+        return ''
+    }
+  })
+}
+
 export default {
   name: 'Interact',
   data () {
@@ -99,6 +123,9 @@ export default {
       interfaceNames: [],
       isErrorInInterfaces: false,
       focusInterface: {},
+      focusInterfacePaybale: false,
+      payValue: '0',
+      payIsCorrect: false,
       focusContract: {},
       inputInterfaceData: [],
       inputArguments: [],
@@ -137,6 +164,7 @@ export default {
         return prev
       }, [])
       this.focusInterface = {}
+      this.focusInterfacePaybale = false
       this.inputInterfaceData = []
     }
   },
@@ -164,9 +192,6 @@ export default {
       'pushAccountToWallet',
       'notice'
     ]),
-    setComputedGas (value) {
-      this.computedGas = value
-    },
     updateContractByQuery (query) {
       this.contract.address = ''
       this.contract.interface = ''
@@ -215,30 +240,44 @@ export default {
       this.interfacesList = interfacesJSON
     },
     selectInterface (name) {
-      const api = this.interfacesList.filter(item => {
+      const api = this.interfacesList.find(item => {
         return item.name === name
-      })[0]
-      this.focusInterface = api || {}
+      }) || {}
+      this.focusInterface = api
       this.inputInterfaceData = []
-      this.inputArguments = []
+      this.inputArguments = genDefaultInputs(api.inputs)
+      this.focusInterfacePaybale = api.payable
+      this.payValue = '0'
+      this.payIsCorrect = false
       this.txInfo = this.$t('Common.txInfo.base')
+      this.estimateGas()
       this.$nextTick(() => {
         this.inputInterfaceData = [...api.inputs]
       })
     },
     pushData (index, value) {
-      this.inputArguments[index] = value
+      if (index === -1) {
+        this.payValue = value
+      } else {
+        this.inputArguments[index] = value
+      }
       if (this.focusInterface.constant) {
         return
       }
-      this.focusContract.options.address = this.contract.address
-      this.focusContract.methods[this.focusInterface.name](...this.inputArguments)
-        .estimateGas()
-        .then(this.setComputedGas)
-        .catch(err => {
-          // this.notice(['warn', this.$t('Common.notice.warn') + (err.message || err), 10000])
-          console.warn(err.message || err)
-        })
+      this.estimateGas()
+    },
+    estimateGas () {
+      if (this.focusContract.options && this.focusInterface.name && this.contract.address) {
+        this.focusContract.options.address = this.contract.address
+        this.focusContract.methods[this.focusInterface.name](...this.inputArguments)
+          .estimateGas()
+          .then(res => {
+            this.computedGas = res + 15000
+          }).catch(err => {
+            // this.notice(['warn', this.$t('Common.notice.warn') + (err.message || err), 10000])
+            console.warn(err.message || err)
+          })
+      }
     },
     onNext (options) {
       // this.web3.eth.getTransactionCount(options.from, 'pending').then(res => {
@@ -247,6 +286,10 @@ export default {
         this.txInfo = `${this.$t('Common.txInfo.base')}:<br>`
         this.txInfo += `nonce: ${res} --- OK<br>`
         this.txInfo += `from: ${options.from.substr(0, 22)}... --- OK<br>`
+        if (this.focusInterfacePaybale) {
+          this.txConfig.value = this.payValue
+          this.txInfo += `value: ${this.payValue} --- OK<br>`
+        }
         const inputGasPrice = Number(this.web3.utils.fromWei(options.gasPrice, 'Gwei'))
         let gasPriceStatus = 'OK'
         if (inputGasPrice < this.eth.MIN_GAS_PRICE_GWEI) {
@@ -261,7 +304,7 @@ export default {
         this.txInfo += `Gas Limit: ${inputGas} --- ${gasSuitable ? 'OK' : 'Gas set too low'}<br>`
         this.txInfo += 'Notice:<br>'
         const maxGas = inputGasPrice * inputGas
-        this.txInfo += `Maximum gas cost: ${maxGas} Gwei<br>`
+        this.txInfo += `Maximum gas cost: ${maxGas.toString().substr(0, 8)} Gwei<br>`
       })
     },
     send () {
@@ -356,7 +399,7 @@ export default {
     resize vertical
 .interface-data-box
   margin -10px 0 20px
-.input-data-boxs
+.input-data-boxs, .input-value-boxs
   padding-left 20px
   font-size 14px
   span

@@ -89,6 +89,9 @@ export default {
       this.options.gasPrice = newValue
     }
   },
+  created () {
+    this.options.gasPrice = this.gasPrice || '20000000000'
+  },
   methods: {
     ...mapMutations([
       'toAddAccounts'

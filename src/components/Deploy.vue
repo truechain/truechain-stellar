@@ -203,7 +203,7 @@ export default {
       contract.deploy({data: '0x' + code})
         .estimateGas()
         .then(res => {
-          this.computedGas = res
+          this.computedGas = res + 15000
         }).catch(err => {
           this.computedGas = ''
           // this.notice(['warn', this.$t('Common.notice.warn') + (err.message || err), 10000])
