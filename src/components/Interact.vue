@@ -103,6 +103,8 @@ function genDefaultInputs (inputs) {
         return '0x0000000000000000000000000000000000000000'
       case /bool/.test(input.type):
         return false
+      case /byte/.test(input.type):
+        return '0x00'
       default:
         return ''
     }
