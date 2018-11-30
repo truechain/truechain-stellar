@@ -436,6 +436,9 @@ nav
   opacity .9
   &:hover
     opacity 1
+  p
+    padding-right 20px
+    word-break break-all
 .tc-notice-close
   position absolute
   top 50%
