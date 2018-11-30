@@ -113,7 +113,11 @@ const webpackConfig = merge(baseWebpackConfig, {
       {
         from: path.resolve(__dirname, '../static'),
         to: config.build.assetsSubDirectory,
-        ignore: ['.*']
+        ignore: ['.*', '*.sol', 'soljson*.js']
+      },
+      {
+        from: path.resolve(__dirname, '../favicon.ico'),
+        to: config.build.assetsPublicPath
       }
     ])
   ]
