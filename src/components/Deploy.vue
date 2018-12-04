@@ -346,6 +346,7 @@ export default {
       try {
         this.pushAccountToWallet(this.deployConfig.from)
       } catch (err) {
+        console.error(err)
         this.notice(['error', this.$t('Common.notice.error') + (err.message || err), 10000])
         return
       }
@@ -363,6 +364,7 @@ export default {
           this.notice(['log', this.$t('Common.notice.txSuccess') + rec.transactionHash, 10000])
         })
         .on('error', err => {
+          console.error(err)
           let errMsg = (err.message || err).toString()
           errMsg = errMsg.split(':')[0]
           this.afterTxError({ txHash, errMsg })
