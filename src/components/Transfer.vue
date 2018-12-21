@@ -94,7 +94,7 @@ export default {
           this.balanceI = '> 1 Billion'
           this.balanceF = ''
         } else {
-          this.balanceI = parseInt(balance / 1e18)
+          this.balanceI = Math.floor(balance / 1e18)
           const bf = balance.padStart(18, '0').substr(-18).split('')
           for (let i = 0; i < 18; i += 3) {
             bf[i] = ',' + bf[i]
