@@ -72,7 +72,6 @@
             :isCorrect.sync="item.isCorrect"
             @pushData="pushData" />
         </div>
-        <div class="clear"></div>
       </div>
       <div class="form-deploy">
         <set-tx-config
@@ -475,14 +474,16 @@ export default {
 .deploy-cons
   p
     line-height 30px
+  >div
+    margin 20px 0
+    display flex
   .label
     display block
-    float left
-    width 100px
+    flex 100px 0 0
     line-height 40px
   .input
     float left
-    width calc(100% - 100px)
+    flex 1
   margin-bottom 20px
 
 .form-deploy
