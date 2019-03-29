@@ -22,5 +22,11 @@
     "tag": "ethlocalnet",
     "provider": "http://127.0.0.1:8545",
     "type": "eth"
+  },
+  {
+    "name": "Ropsten ETH",
+    "tag": "ropsten",
+    "provider": "https://ropsten.infura.io/",
+    "type": "eth"
   }
 ]

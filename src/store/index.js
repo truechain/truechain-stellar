@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import Web3 from 'web3'
+import Web3 from 'web3true'
 
 import accounts from './modules/accounts'
 import eth from './modules/eth'
