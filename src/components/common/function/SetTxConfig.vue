@@ -43,7 +43,7 @@ export default {
     return {
       options: {
         from: '',
-        gas: this.computedGas,
+        gas: Number(this.computedGas) || 100000,
         gasPrice: '20000000000'
       }
     }

@@ -97,6 +97,8 @@ const contractNames = contracts.map(contract => {
 function genDefaultInputs (inputs) {
   return inputs.map(input => {
     switch (true) {
+      case /\[\]/.test(input.type):
+        return []
       case /int/.test(input.type):
         return '0'
       case /address/.test(input.type):
@@ -131,7 +133,7 @@ export default {
       focusContract: {},
       inputInterfaceData: [],
       inputArguments: [],
-      computedGas: 0,
+      computedGas: '---',
       txConfig: {},
       txInfo: this.$t('Common.txInfo.base'),
       pageTranslateY: 0,
@@ -269,6 +271,7 @@ export default {
       this.estimateGas()
     },
     estimateGas () {
+      this.computedGas = '---'
       if (this.focusContract.options && this.focusInterface.name && this.contract.address) {
         this.focusContract.options.address = this.contract.address
         this.focusContract.methods[this.focusInterface.name](...this.inputArguments)
@@ -301,7 +304,7 @@ export default {
         }
         this.txInfo += `Gas Price: ${inputGasPrice} Gwei --- ${gasPriceStatus}<br>`
         const inputGas = parseInt(options.gas)
-        const suggestGas = parseInt(this.computedGas)
+        const suggestGas = parseInt(this.computedGas) || 100000
         const gasSuitable = inputGas >= suggestGas
         this.txInfo += `Gas Limit: ${inputGas} --- ${gasSuitable ? 'OK' : 'Gas set too low'}<br>`
         this.txInfo += 'Notice:<br>'
