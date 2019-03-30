@@ -19,6 +19,7 @@
     },
     "network": {
       "beta": "True β Main Net",
+      "main": "True Main Net",
       "mainnet": "ETH Main Net",
       "ropsten": "Ropsten",
       "privatenet": "Private Net",

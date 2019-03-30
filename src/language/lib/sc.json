@@ -19,6 +19,7 @@
     },
     "network": {
       "beta": "True β主网",
+      "main": "True 主网",
       "mainnet": "ETH主网",
       "ropsten": "Ropsten",
       "privatenet": "私有网络",
