@@ -31,7 +31,7 @@ contract TestERC20Token {
     using SafeMath for uint256;
     string public constant name = "Test ERC20 Token";
     string public constant symbol = "TET";
-    uint256 public constant decimals = 6;
+    uint256 public constant decimals = 18;
     uint256 _totalSupply = 100000000 * 10 ** decimals;
     address payable public founder = address(0);
     uint256 public distributed = 0;

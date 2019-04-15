@@ -26,7 +26,7 @@
     "vue-i18n": "^7.7.0",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",
-    "web3true": "^1.0.8"
+    "web3true": "^1.0.10"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

@@ -28,7 +28,7 @@ const state = {
 
 const mutations = {
   setWeb3Provider (state, config) {
-    state.web3 = new Web3(config.provider, config.type)
+    state.web3.setProvider(config.provider, config.type)
     state.provider = config
   },
   initI18n (state, i18n) {

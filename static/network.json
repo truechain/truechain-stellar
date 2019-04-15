@@ -6,6 +6,12 @@
     "type": "etrue"
   },
   {
+    "name": "True test",
+    "tag": "test",
+    "provider": "https://rpc.truescan.net/testnet/",
+    "type": "etrue"
+  },
+  {
     "name": "Local Net",
     "tag": "localnet",
     "provider": "http://127.0.0.1:8545",
