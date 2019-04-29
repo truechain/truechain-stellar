@@ -1,13 +1,6 @@
 <template>
   <svg
-    width="40"
-    height="40"
-    viewBox="0 0 40 40"
-    version="1.1"
-    xmlns="http://www.w3.org/2000/svg"
-    xmlns:xlink="http://www.w3.org/1999/xlink"
-    xml:space="preserve"
-    xmlns:serif="http://www.serif.com/"
+    width="40" height="40" viewBox="0 0 40 40"
     style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;"
     :style="{'fill': color}">
     <path d="M4.783,34.151L4.783,6.051L7.318,6.051L7.318,34.145L9.328,32.135L11.12,33.927L7.318,37.729L7.318,37.733L7.314,37.733L6.051,38.996L4.787,37.733L4.783,37.733L4.783,37.73L4.781,37.733L0.979,33.931L2.771,32.139L4.783,34.151Z"/>

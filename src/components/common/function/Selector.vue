@@ -1,6 +1,6 @@
 <template>
   <div class="selector">
-    <span @click="toggleSelectMenu(true)">{{selected}}</span>
+    <span @click.stop="toggleSelectMenu(true)">{{selected}}</span>
     <div class="ul-box" :class="{'ul-box-close': !selectMenuIsOpen}">
     <ul
       :class="{'selector-scroll': needScroll}">
@@ -8,7 +8,9 @@
         v-for="(item, index) in options"
         :key="index"
         @click="changeSelect(item)">
-        <i/>
+        <i @click.stop="copyOption(item)" v-if="canCopy !== undefined">
+          <icon-copy color="#009674" />
+        </i>
         {{item}}
       </li>
       <li
@@ -29,11 +31,13 @@
 </template>
 
 <script>
-// import Clipboard from 'clipboard'
+import { copy } from 'iclipboard'
+import IconCopy from 'svg-icon/copy'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Selector',
-  props: ['options', 'defaultSelect', 'defaultOptions'],
+  props: ['options', 'defaultSelect', 'defaultOptions', 'canCopy'],
   data () {
     return {
       selected: this.defaultSelect,
@@ -64,13 +68,16 @@ export default {
     this.$el.querySelector('ul').addEventListener('mousewheel', this.onMouseWheel)
   },
   methods: {
+    ...mapActions({
+      notice: 'notice'
+    }),
     toggleSelectMenu (toOpen) {
       toOpen = toOpen === true
       this.selectMenuIsOpen = toOpen
       if (toOpen) {
-        document.addEventListener('click', this.toggleSelectMenu, true)
+        document.addEventListener('click', this.toggleSelectMenu)
       } else {
-        document.removeEventListener('click', this.toggleSelectMenu, true)
+        document.removeEventListener('click', this.toggleSelectMenu)
       }
     },
     changeSelect (item) {
@@ -85,7 +92,17 @@ export default {
       if (this.needScroll) {
         e.stopPropagation()
       }
+    },
+    copyOption (text) {
+      if (copy(text)) {
+        this.notice(['info', this.$t('Copy.success') + text, 3000])
+      } else {
+        this.notice(['warn', this.$t('Copy.fail'), 3000])
+      }
     }
+  },
+  components: {
+    IconCopy
   }
 }
 </script>
@@ -140,12 +157,13 @@ li
     position absolute
     width 20px
     height 20px
-    border-radius 100%
-    border solid 1px #ddd
     top 50%
-    left -30px
+    left -24px
     transform translateY(-50%)
-    box-sizing border-box
+    opacity .6
+    transition opacity .3s
+    &:hover
+      opacity 1
 .default-options
   background-color #eee !important
 .no-options

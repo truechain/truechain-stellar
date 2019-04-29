@@ -111,5 +111,9 @@
       "contractCreation": "Contract Creation",
       "contractAddress": "Contract Address"
     }
+  },
+  "Copy": {
+    "success": "Copied: ",
+    "fail": "Copy failed"
   }
 }

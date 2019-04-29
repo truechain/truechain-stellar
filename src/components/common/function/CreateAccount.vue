@@ -85,16 +85,18 @@ export default {
       if (this.repeatPassword !== '') {
         this.onRepeatChainge()
       }
-      this.passwordIsOk = false
-      let info = passwordStrength.test(this.inputPassword)
-      if (info.strong) {
-        this.passwordCheckMsg = ''
-        this.passwordIsOk = true
-      } else if (info.requiredTestErrors.length) {
-        this.passwordCheckMsg = info.requiredTestErrors[0]
-      } else {
-        this.passwordCheckMsg = info.optionalTestErrors[0]
-      }
+      // this.passwordIsOk = false
+      // let info = passwordStrength.test(this.inputPassword)
+      // if (info.strong) {
+      //   this.passwordCheckMsg = ''
+      //   this.passwordIsOk = true
+      // } else if (info.requiredTestErrors.length) {
+      //   this.passwordCheckMsg = info.requiredTestErrors[0]
+      // } else {
+      //   this.passwordCheckMsg = info.optionalTestErrors[0]
+      // }
+      this.passwordCheckMsg = ''
+      this.passwordIsOk = true
     },
     onRepeatChainge () {
       this.repeatIsOk = false

@@ -67,6 +67,9 @@ const actions = {
       delay = 300
     }
     switch (color) {
+      case 'info':
+        color = '#009674'
+        break
       case 'log':
         color = '#2fa4d9'
         break

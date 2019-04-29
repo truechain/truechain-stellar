@@ -111,5 +111,9 @@
       "contractCreation": "合约创建",
       "contractAddress": "合约地址"
     }
+  },
+  "Copy": {
+    "success": "已复制：",
+    "fail": "复制失败"
   }
 }

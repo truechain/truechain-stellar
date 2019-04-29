@@ -8,6 +8,7 @@
           :defaultSelect="'0x...'"
           :options="allAccounts"
           :defaultOptions="deployFromDefaultOptions"
+          canCopy
           @change="changeDeployFrom">
         </selector>
       </div>
