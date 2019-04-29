@@ -9,7 +9,9 @@
       type="text">
     <div v-if="!value" class="input-default">{{type}}</div>
     <transition name="fade">
-      <div class="input-multiple" v-if="focused && value.length < 16" @click="multiple">x 10<sup>18</sup></div>
+      <div class="input-multiple"
+        v-if="focused && value.length < 16"
+        @click="multiple">x 10<sup>18</sup></div>
     </transition>
   </div>
 </template>
@@ -79,7 +81,7 @@ export default {
       if (/\D/.test(numI) || /\D/.test(numD)) {
         return
       }
-      this.value = numI + numD.padEnd(18, '0')
+      this.value = (numI + numD.padEnd(18, '0')).replace(/^0+(\d)/, '$1')
       this.delayCheck()
     },
     checkAsArray () {
