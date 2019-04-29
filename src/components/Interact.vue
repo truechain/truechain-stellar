@@ -84,11 +84,11 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 
-import Selector from '@/components/common/function/Selector'
-import SetTxConfig from '@/components/common/function/SetTxConfig'
+import Selector from 'common/function/Selector'
+import SetTxConfig from 'common/function/SetTxConfig'
 import contracts from 'static/contracts.json'
 
-import InterfaceInput from '@/components/common/gui/InterfaceInput'
+import InterfaceInput from 'common/gui/InterfaceInput'
 
 const contractNames = contracts.map(contract => {
   return contract.name

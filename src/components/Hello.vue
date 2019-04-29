@@ -11,9 +11,9 @@
 </template>
 
 <script>
-import LoadingAnimation from '@/components/common/gui/Loading'
-import CreateAccount from '@/components/common/function/CreateAccount'
-import SigninAccount from '@/components/common/function/SigninAccount'
+import LoadingAnimation from 'common/gui/Loading'
+import CreateAccount from 'common/function/CreateAccount'
+import SigninAccount from 'common/function/SigninAccount'
 import routes from '@/router/routes.js'
 
 export default {

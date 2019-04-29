@@ -14,8 +14,8 @@
 <script>
 import Vue from 'vue'
 import { mapState } from 'vuex'
-import TxLog from '@/components/common/logs/TxLog'
-import CreationLog from '@/components/common/logs/CreationLog'
+import TxLog from 'common/logs/TxLog'
+import CreationLog from 'common/logs/CreationLog'
 
 const LogCard = Vue.component('log-card', {
   functional: true,

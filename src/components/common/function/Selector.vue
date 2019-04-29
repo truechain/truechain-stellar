@@ -3,12 +3,12 @@
     <span @click="toggleSelectMenu(true)">{{selected}}</span>
     <div class="ul-box" :class="{'ul-box-close': !selectMenuIsOpen}">
     <ul
-      :style="{'transform': `translateY(${selectMenuIsOpen ? '0' : '-100%'})`}"
       :class="{'selector-scroll': needScroll}">
       <li
         v-for="(item, index) in options"
         :key="index"
         @click="changeSelect(item)">
+        <i/>
         {{item}}
       </li>
       <li
@@ -29,6 +29,8 @@
 </template>
 
 <script>
+// import Clipboard from 'clipboard'
+
 export default {
   name: 'Selector',
   props: ['options', 'defaultSelect', 'defaultOptions'],
@@ -109,27 +111,41 @@ span
   left 0
   top calc(5em - 38px)
   min-width 100%
-  overflow hidden
   z-index 9
+  transform-origin 0% 0%
+  transition transform .5s, opacity .3s .2s
 .ul-box-close
-  height 0
+  transition transform .5s, opacity .3s
+  transform scaleY(0)
+  opacity 0
 ul
   background-color #fff
   border solid 1px #ddd
   border-radius 3px
-  transform-origin 0% 0%
-  transition .4s
+  // transform-origin 0% 0%
+  // transition .4s
 li
   padding 0 9px
   width 100%
   margin 2px 0
   box-sizing border-box
+  position relative
   &:nth-child(even)
     background-color #fbfbfb
   &:first-child
     margin-top 0
   &:last-child
     margin-bottom 0
+  i
+    position absolute
+    width 20px
+    height 20px
+    border-radius 100%
+    border solid 1px #ddd
+    top 50%
+    left -30px
+    transform translateY(-50%)
+    box-sizing border-box
 .default-options
   background-color #eee !important
 .no-options

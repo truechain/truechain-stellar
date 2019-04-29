@@ -36,9 +36,9 @@
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
-import InputAddress from '@/components/common/gui/InputAddress'
-import InputUint from '@/components/common/gui/InputUint'
-import SetTxConfig from '@/components/common/function/SetTxConfig'
+import InputAddress from 'common/gui/InputAddress'
+import InputUint from 'common/gui/InputUint'
+import SetTxConfig from 'common/function/SetTxConfig'
 
 export default {
   name: 'Transfer',

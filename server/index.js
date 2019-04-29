@@ -2,7 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const solc = require('solc')
 
-const lowVersion = require('../static/soljson-v0.4.25+commit.59dbf8f1.js')
+const lowVersion = require('../public/soljson-v0.4.25+commit.59dbf8f1.js')
 
 const app = express()
 app.use(bodyParser.json({ limit: '1mb' }))

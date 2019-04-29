@@ -78,9 +78,9 @@
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import routes from '@/router/routes.js'
 import Hello from '@/components/Hello'
-import Help from '@/components/common/function/Help'
-import LoadingAnimation from '@/components/common/gui/Loading'
-import SigninAccount from '@/components/common/function/SigninAccount'
+import Help from 'common/function/Help'
+import LoadingAnimation from 'common/gui/Loading'
+import SigninAccount from 'common/function/SigninAccount'
 import networkSet from 'static/network.json'
 
 const ETH_NETWORK_UPDATE_CYCLE = 10000

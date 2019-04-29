@@ -96,11 +96,11 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 import api from '@/api-config'
 
 import IconCompile from 'svg-icon/compile'
-import AnimLoading from '@/components/common/gui/Loading'
-import Selector from '@/components/common/function/Selector'
-import SetTxConfig from '@/components/common/function/SetTxConfig'
+import AnimLoading from 'common/gui/Loading'
+import Selector from 'common/function/Selector'
+import SetTxConfig from 'common/function/SetTxConfig'
 
-import InterfaceInput from '@/components/common/gui/InterfaceInput'
+import InterfaceInput from 'common/gui/InterfaceInput'
 
 const debounce = (func, delay) => {
   if (typeof func !== 'function') {

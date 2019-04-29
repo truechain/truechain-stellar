@@ -1,11 +1,11 @@
 import Vue from 'vue'
 
-import InputAddress from '@/components/common/gui/InputAddress'
-import InputUint from '@/components/common/gui/InputUint'
-import InputString from '@/components/common/gui/InputString'
-import InputBool from '@/components/common/gui/InputBool'
-import InputByte from '@/components/common/gui/InputByte'
-import InputAny from '@/components/common/gui/InputAny'
+import InputAddress from 'common/gui/InputAddress'
+import InputUint from 'common/gui/InputUint'
+import InputString from 'common/gui/InputString'
+import InputBool from 'common/gui/InputBool'
+import InputByte from 'common/gui/InputByte'
+import InputAny from 'common/gui/InputAny'
 
 export default Vue.component('interface-input', {
   functional: true,

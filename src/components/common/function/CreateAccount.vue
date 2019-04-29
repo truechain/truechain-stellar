@@ -36,8 +36,8 @@
 import { mapState } from 'vuex'
 import passwordStrength from 'owasp-password-strength-test'
 
-import Help from '@/components/common/function/Help'
-import Notice from '@/components/common/function/Notice'
+import Help from 'common/function/Help'
+import Notice from 'common/function/Notice'
 
 // const passwordHelp = 'Do NOT forget to save this'
 // const keystoreNotice = `**Do not lose it!** It cannot be recovered if you lose it.<br>

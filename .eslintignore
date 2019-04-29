@@ -1,5 +1,1 @@
-/build/
-/config/
-/dist/
-/*.js
-/static/*.js
+public/**/*.js

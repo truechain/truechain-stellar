@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import LoadingAnimation from '@/components/common/gui/Loading'
+import LoadingAnimation from 'common/gui/Loading'
 
 export default {
   name: 'chain',
