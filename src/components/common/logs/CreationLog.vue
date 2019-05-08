@@ -18,7 +18,7 @@
     <div v-else-if="data.finished" class="b-normal tx-log-result">
       <span class="margin-right-1em">{{ $t('Common.logs.txSuccess') }}</span>
       <span class="margin-right-1em">{{ $t('Common.logs.blockHeight') }} {{ data.height }}</span>
-      <span>{{ $t('Common.logs.contractAddress') }} {{ data.contract }}</span>
+      <span>{{ $t('Common.logs.contractAddress') }} {{ data.contract }} </span>
       <span class="tx-log-time">{{ receiptTimeAb }}</span>
     </div>
     <div v-else class="b-default tx-log-result">{{ $t('Common.waiting') }}...</div>
