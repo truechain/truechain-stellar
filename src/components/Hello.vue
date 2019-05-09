@@ -7,6 +7,9 @@
     </div>
     <div class="tc-card tc-hello-card">
       <h1 class="new">使用GreenBelt</h1>
+      <p>
+        从<a class="marked" href="https://chrome.google.com/webstore/detail/greenbelt/cgmhechlnfbnfcnomkmcillkgnipocfh" target="_blank">Chrome应用商店</a>安装
+      </p>
       <div id="use-greenbelt" class="b-info" @click="loginWithGreenBelt">使用GreenBelt管理账户</div>
     </div>
     <signin-account @done="jumpToHomepage" @pass="jumpToHomepage"></signin-account>
