@@ -179,6 +179,9 @@ export default {
       this.$router.push('/')
     },
     onresize () {
+      if (!this.$refs.view) {
+        return
+      }
       const updateSize = this.$refs.view.updateSize
       if (typeof updateSize === 'function') {
         updateSize()
