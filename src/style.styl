@@ -132,9 +132,32 @@ hr
   color #d80315
 .b-default
   background-color #999999
+.b-info
+  background-color #0fa9a2
 .b-normal
   background-color #2fa4d9
 .b-warning
   background-color #ed951f
 .b-error
   background-color #d80315
+
+.new:after
+  content 'New!'
+  color #0fa9a2
+  display inline-block
+  animation charJump 1.4s linear infinite
+
+
+@keyframes charJump
+  0%
+    transform translateY(0) scale(.6)
+  60%
+    transform translateY(0) scale(.6)
+  70%
+    transform translateY(-8%) scale(.6)
+  80%
+    transform translateY(0) scale(.6)
+  90%
+    transform translateY(-8%) scale(.6)
+  100%
+    transform translateY(0) scale(.6)

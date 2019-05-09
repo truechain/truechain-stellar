@@ -112,7 +112,7 @@ export default {
   top 50%
   cursor pointer
   z-index 10
-  color #009674
+  color #0fa9a2
   background-color #fff
   transform translateY(-50%)
   opacity .6

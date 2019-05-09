@@ -1,7 +1,9 @@
 <template>
   <div id="tc-app">
     <nav :class="{'tc-nav-login': $route.name === null}">
-      <img class="tc-nav-logo" src="./assets/logo.png" alt="logo" height="60">
+      <router-link to="/">
+        <img class="tc-nav-logo" src="./assets/logo.png" alt="logo" height="60">
+      </router-link>
       <div style="position: absolute; width: 100%;">
         <div
           class="tc-nav-title"
@@ -23,7 +25,8 @@
         'tc-user-hide': $route.name === null,
         'tc-user-ctrl-open': hoverNav === 2
       }">
-        <div class="tc-user-net"
+        <div v-if="useGreenBelt" class="tc-user-net">连接至GreenBelt</div>
+        <div v-else class="tc-user-net"
           :class="{ 'tc-user-net-hover': hoverNav === 1 }"
           :style="{ 'font-size': provider.tag ? '16px' : '14px' }"
           @mouseenter="setHoverObjIndex(1)">
@@ -42,7 +45,7 @@
             </ul>
           </div>
         </transition>
-        <div class="tc-new-net">
+        <div v-if="!useGreenBelt" class="tc-new-net">
           <span :class="{'tc-new-net-button': customProviderLegal}"
             @click="uploadNewProvider">{{ $t('App.custom') }}</span>
           <input type="text" v-model="customProvider">
@@ -102,6 +105,7 @@ export default {
   },
   computed: {
     ...mapState({
+      useGreenBelt: state => state.useGreenBelt,
       languageTag: state => state.languageTag,
       provider: state => state.provider,
       accountsDialogIsOpen: state => state.accounts.accountsDialogIsOpen
@@ -292,6 +296,7 @@ nav
   span
     transition padding-bottom .4s
     cursor pointer
+    margin 0 2px
     padding-bottom 10px
     border-bottom solid 4px #fff
   .focus

@@ -20,6 +20,9 @@ const state = {
   web3,
   provider: networkSet[0],
 
+  useGreenBelt: false,
+  greenbeltAddr: '',
+
   noticeBoxTimer: 0,
   noticeBox: null,
   noticeTextBox: null,
@@ -55,6 +58,16 @@ const mutations = {
 }
 
 const actions = {
+  async useGreenBelt ({ state }, provider) {
+    await provider.enable().then(addrs => {
+      state.greenbeltAddr = addrs[0]
+    })
+    provider.on('accountsChanged' ,addrs => {
+      state.greenbeltAddr = addrs[0]
+    })
+    state.web3.setProvider(provider)
+    state.useGreenBelt = true
+  },
   notice ({ state }, [color, text, time]) {
     const el = state.noticeBox
     const tel = state.noticeTextBox
@@ -68,7 +81,7 @@ const actions = {
     }
     switch (color) {
       case 'info':
-        color = '#009674'
+        color = '#0fa9a2'
         break
       case 'log':
         color = '#2fa4d9'

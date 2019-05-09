@@ -3,8 +3,9 @@
     <div>
       <span class="label">From</span>
       <div class="input">
+        <div class="greenbelt-from" v-if="useGreenBelt">{{ greenbeltAddr }}</div>
         <selector
-          ref="account"
+          v-else ref="account"
           :defaultSelect="'0x...'"
           :options="allAccounts"
           :defaultOptions="deployFromDefaultOptions"
@@ -51,6 +52,8 @@ export default {
   },
   computed: {
     ...mapState({
+      useGreenBelt: state => state.useGreenBelt,
+      greenbeltAddr: state => state.greenbeltAddr,
       'gasPrice': state => state.eth.gasPrice,
       'utils': state => state.web3.utils,
       'latestAccounts': state => state.accounts.latestAccounts
@@ -62,7 +65,8 @@ export default {
       return [this.$t('SetTxConfig.newAccount')]
     },
     gotReady () {
-      return Boolean(this.utils.isAddress(this.options.from) && this.active)
+      const validFrom = this.useGreenBelt && this.greenbeltAddr || this.utils.isAddress(this.options.from)
+      return validFrom && this.active
     },
     gasPriceGwei () {
       let error = false
@@ -110,6 +114,9 @@ export default {
     next () {
       if (!this.gotReady) {
         return
+      }
+      if (this.useGreenBelt && this.greenbeltAddr) {
+        this.options.from = this.greenbeltAddr
       }
       this.$emit('next', this.options)
     }
@@ -172,4 +179,17 @@ export default {
 .next-active
   background-color #0d85da
   cursor pointer
+
+.greenbelt-from
+  overflow hidden
+  text-overflow ellipsis
+  position relative
+  &:before
+    content 'GreenBelt account'
+    color #0fa9a2
+    font-size 12px
+    position absolute
+    top 0
+    left 0
+    line-height 12px
 </style>

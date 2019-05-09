@@ -9,7 +9,7 @@
         :key="index"
         @click="changeSelect(item)">
         <i @click.stop="copyOption(item)" v-if="canCopy !== undefined">
-          <icon-copy color="#009674" />
+          <icon-copy color="#0fa9a2" />
         </i>
         {{item}}
       </li>

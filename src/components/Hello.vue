@@ -5,12 +5,18 @@
       <p>{{ $t('Hello.welcome') }}</p>
       <p>Github: <a class="marked" target="_blank" href="https://github.com/truechain/truechain-stellar">https://github.com/truechain/truechain-stellar</a></p>
     </div>
+    <div class="tc-card tc-hello-card">
+      <h1 class="new">使用GreenBelt</h1>
+      <div id="use-greenbelt" class="b-info" @click="loginWithGreenBelt">使用GreenBelt管理账户</div>
+    </div>
     <signin-account @done="jumpToHomepage" @pass="jumpToHomepage"></signin-account>
     <create-account></create-account>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 import LoadingAnimation from 'common/gui/Loading'
 import CreateAccount from 'common/function/CreateAccount'
 import SigninAccount from 'common/function/SigninAccount'
@@ -37,8 +43,19 @@ export default {
     window.el = this
   },
   methods: {
+    ...mapActions({
+      useGreenBelt: 'useGreenBelt'
+    }),
     jumpToHomepage () {
       this.$router.push(routes[0])
+    },
+    loginWithGreenBelt () {
+      const provider = window.truechain
+      if (provider && provider.isMetaMask) {
+        this.useGreenBelt(provider).then(this.jumpToHomepage)
+      } else {
+        // TODO: notice
+      }
     }
   },
   components: {
@@ -50,8 +67,6 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.green-border
-  border-left solid 6px #091
 #hellopage
   position absolute
   width 100%
@@ -72,56 +87,13 @@ export default {
       color #014676
     .marked
       color #014676
-  input
-    transition border-left .4s
-.tc-hello-signup
-  ul
-    height 0px
-    transition height .6s
-    margin-left 10px
-    overflow hidden
-    box-sizing border-box
-  li
-    clear both
-    line-height 40px
-    margin-bottom 20px
-    width 320px
-    position relative
-  input
-    float right
-  .msg
-    color red
-    font-size 12px
-    margin-top 10px
-    line-height 20px
-  .back
-    opacity .6
-    cursor pointer
-    transition opacity .4s
-    font-size 14px
-    line-height 20px
-    &:hover
-      opacity 1
-  .sign-up
-    line-height 40px
-    font-weight bold
-    font-size 1.6em
-    transition .4s
-    span
-      cursor pointer
-    & svg
-      vertical-align bottom
-    &:hover
-      color #014676
-  .sign-up-button
-    font-size 1em
-    transform translateX(10px)
-  .get-invt-code
-    display block
-    position absolute
-    bottom -30px
-    right 0px
-    font-size 12px
-    color #014676
-    text-decoration-line none
+#use-greenbelt
+  margin 20px 0
+  height 40px
+  width 320px
+  text-align center
+  line-height 40px
+  color #fff
+  border-radius 3px
+  cursor pointer
 </style>
