@@ -6,11 +6,16 @@
       <p>Github: <a class="marked" target="_blank" href="https://github.com/truechain/truechain-stellar">https://github.com/truechain/truechain-stellar</a></p>
     </div>
     <div class="tc-card tc-hello-card">
-      <h1 class="new">使用GreenBelt</h1>
+      <h1 class="new">{{ $t('GreenBelt.title') }}</h1>
       <p>
-        从<a class="marked" href="https://chrome.google.com/webstore/detail/greenbelt/cgmhechlnfbnfcnomkmcillkgnipocfh" target="_blank">Chrome应用商店</a>安装
+        <a class="marked" :href="greenbelt" target="_blank">{{ $t('GreenBelt.download') }}</a>
       </p>
-      <div id="use-greenbelt" class="b-info" @click="loginWithGreenBelt">使用GreenBelt管理账户</div>
+      <div id="use-greenbelt" class="b-info" @click="loginWithGreenBelt">
+        {{ $t('GreenBelt.start') }}
+        <div class="greenbelt-version-notice" @click.stop>
+          <notice :notice="$t('GreenBelt.versionNotice')" :width="240"></notice>
+        </div>
+      </div>
     </div>
     <signin-account @done="jumpToHomepage" @pass="jumpToHomepage"></signin-account>
     <create-account></create-account>
@@ -20,10 +25,13 @@
 <script>
 import { mapActions } from 'vuex'
 
+import Notice from 'common/function/Notice'
 import LoadingAnimation from 'common/gui/Loading'
 import CreateAccount from 'common/function/CreateAccount'
 import SigninAccount from 'common/function/SigninAccount'
 import routes from '@/router/routes.js'
+
+const greenbelt = 'https://chrome.google.com/webstore/detail/greenbelt/cgmhechlnfbnfcnomkmcillkgnipocfh'
 
 export default {
   name: 'hello',
@@ -39,7 +47,9 @@ export default {
       repeatCheckMsg: '',
       invtCode: '',
       isOpen: false,
-      signUpWaiting: false
+      signUpWaiting: false,
+
+      greenbelt
     }
   },
   mounted () {
@@ -62,6 +72,7 @@ export default {
     }
   },
   components: {
+    Notice,
     LoadingAnimation,
     CreateAccount,
     SigninAccount
@@ -99,4 +110,11 @@ export default {
   color #fff
   border-radius 3px
   cursor pointer
+  position relative
+.greenbelt-version-notice
+  position absolute
+  right -40px
+  top 0
+  width 40px
+  height 40px
 </style>

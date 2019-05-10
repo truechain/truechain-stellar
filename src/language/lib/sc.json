@@ -116,5 +116,11 @@
   "Copy": {
     "success": "已复制：",
     "fail": "复制失败"
+  },
+  "GreenBelt": {
+    "title": "使用GreenBelt",
+    "start": "使用GreenBelt管理账户",
+    "download": "从Chrome商店下载插件",
+    "versionNotice": "请使用7.1.4版本以上的GreenBelt"
   }
 }

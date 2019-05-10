@@ -116,5 +116,11 @@
   "Copy": {
     "success": "Copied: ",
     "fail": "Copy failed"
+  },
+  "GreenBelt": {
+    "title": "Use GreenBelt",
+    "start": "Use GreenBelt to manage accounts",
+    "download": "Download plugins from Chrome Store",
+    "versionNotice": "Please use GreenBelt above v7.1.4"
   }
 }
