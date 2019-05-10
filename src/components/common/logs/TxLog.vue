@@ -13,7 +13,7 @@
       </div>
     </div>
     <div v-if="data.error" class="b-error tx-log-result">
-      <span>{{ $t('Common.logs.txError') }}</span>
+      <span class="margin-right-1em">{{ $t('Common.logs.txError') }}</span>
       <span>{{ data.error }}</span>
       <span class="tx-log-time">{{ receiptTimeAb }}</span>
     </div>

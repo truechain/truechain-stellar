@@ -18,6 +18,7 @@ const state = {
   i18n: null,
   languageTag: 'sc',
   web3,
+  chainId: '19330',
   provider: networkSet[0],
 
   useGreenBelt: false,
@@ -32,6 +33,7 @@ const state = {
 const mutations = {
   setWeb3Provider (state, config) {
     state.web3.setProvider(config.provider, config.type)
+    state.chainId = ''
     state.provider = config
   },
   initI18n (state, i18n) {
@@ -66,6 +68,7 @@ const actions = {
       state.greenbeltAddr = addrs[0]
     })
     state.web3.setProvider(provider)
+    state.chainId = provider.networkVersion
     state.useGreenBelt = true
   },
   notice ({ state }, [color, text, time]) {

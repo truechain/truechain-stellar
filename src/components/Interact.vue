@@ -189,13 +189,15 @@ export default {
   methods: {
     ...mapMutations({
       'afterTxSend': 'log/afterTxSend',
-      'afterTxReceipt': 'log/afterTxReceipt',
       'afterTxError': 'log/afterTxError'
     }),
     ...mapActions([
-      'pushAccountToWallet',
+      'signTx',
       'notice'
     ]),
+    ...mapActions({
+      addPendingTx: 'log/addPendingTx'
+    }),
     updateContractByQuery (query) {
       this.contract.address = ''
       this.contract.interface = ''
@@ -312,7 +314,7 @@ export default {
         this.txInfo += `Maximum gas cost: ${maxGas.toString().substr(0, 8)} Gwei<br>`
       })
     },
-    send () {
+    async send () {
       if (!this.waitToSend) {
         return
       }
@@ -334,27 +336,31 @@ export default {
           this.notice(['error', this.$t('Common.notice.error') + (err.message || err), 10000])
         })
       } else {
-        try {
-          this.pushAccountToWallet(this.txConfig.from)
-        } catch (err) {
-          this.notice(['error', this.$t('Common.notice.error') + (err.message || err), 10000])
-          return
-        }
         const from = this.txConfig.from
         const to = this.focusContract.options.address
         const value = this.txConfig.value || '0'
+        const data = tx.encodeABI()
+
+        const rawTx = await this.signTx(Object.assign({ to, data }, this.txConfig))
+
         let txHash = ''
-        tx.send(this.txConfig)
+        this.web3.eth.sendSignedTransaction(rawTx)
           .on('transactionHash', hash => {
             txHash = hash
             this.afterTxSend({ hash, from, to, value })
             this.notice(['log', this.$t('Common.notice.afterSend') + hash, 10000])
-          })
-          .on('receipt', rec => {
-            this.afterTxReceipt(rec)
-            this.notice(['log', this.$t('Common.notice.txSuccess') + rec.transactionHash, 10000])
+            this.addPendingTx([hash, receipt => {
+              if (receipt.status) {
+                this.notice(['log', this.$t('Common.notice.txSuccess') + receipt.transactionHash, 10000])
+              } else {
+                this.notice(['error', this.$t('Common.notice.txEVMError'), 10000])
+              }
+            }])
           })
           .on('error', err => {
+            if (/EVM/.test(err.message)) {
+              return
+            }
             let errMsg = (err.message || err).toString()
             errMsg = errMsg.split(':')[0]
             this.afterTxError({ txHash, errMsg })

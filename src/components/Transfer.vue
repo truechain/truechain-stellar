@@ -75,13 +75,15 @@ export default {
   methods: {
     ...mapMutations({
       'afterTxSend': 'log/afterTxSend',
-      'afterTxReceipt': 'log/afterTxReceipt',
       'afterTxError': 'log/afterTxError'
     }),
     ...mapActions([
-      'pushAccountToWallet',
+      'signTx',
       'notice'
     ]),
+    ...mapActions({
+      addPendingTx: 'log/addPendingTx'
+    }),
     updateToAdr (_, value) {
       this.toAddress = value
     },
@@ -133,31 +135,35 @@ export default {
         this.waitToSend = true
       })
     },
-    send () {
+    async send () {
       if (!this.waitToSend) {
         return
       }
       this.waitToSend = false
-      try {
-        this.pushAccountToWallet(this.txConfig.from)
-      } catch (err) {
-        throw err
-      }
       const from = this.txConfig.from
       const to = this.txConfig.to
       const value = this.txConfig.value
+
+      const rawTx = await this.signTx(this.txConfig)
+
       let txHash = ''
-      this.web3.eth.sendTransaction(this.txConfig)
+      this.web3.eth.sendSignedTransaction(rawTx)
         .on('transactionHash', hash => {
           txHash = hash
           this.afterTxSend({ hash, from, to, value })
           this.notice(['log', this.$t('Common.notice.afterSend') + hash, 10000])
-        })
-        .on('receipt', rec => {
-          this.afterTxReceipt(rec)
-          this.notice(['log', this.$t('Common.notice.txSuccess') + rec.transactionHash, 10000])
+          this.addPendingTx([hash, receipt => {
+            if (receipt.status) {
+              this.notice(['log', this.$t('Common.notice.txSuccess') + receipt.transactionHash, 10000])
+            } else {
+              this.notice(['error', this.$t('Common.notice.txEVMError'), 10000])
+            }
+          }])
         })
         .on('error', err => {
+          if (/EVM/.test(err.message)) {
+            return
+          }
           let errMsg = (err.message || err).toString()
           errMsg = errMsg.split(':')[0]
           this.afterTxError({ txHash, errMsg })

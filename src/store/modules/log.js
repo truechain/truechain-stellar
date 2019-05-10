@@ -44,7 +44,9 @@ class ContractTxObj extends BaseTxObj {
 }
 
 const state = {
-  logs: []
+  logs: [],
+  monitoring: 0,
+  pendingTxs: new Map()
 }
 
 const mutations = {
@@ -67,7 +69,7 @@ const mutations = {
     if (txRecept.status) {
       tx.onSuccess(time, txRecept)
     } else {
-      tx.onFail(time, true)
+      tx.onFail(time, 'Unknow Error')
     }
   },
   afterTxError (state, { txHash, errMsg }) {
@@ -80,10 +82,58 @@ const mutations = {
   }
 }
 
+const actions = {
+  addPendingTx ({ state, dispatch }, [txHash, cb]) {
+    state.pendingTxs.set(txHash, cb)
+    if (!state.monitoring) {
+      dispatch('startMonitoring')
+    }
+  },
+  startMonitoring ({ state, dispatch }) {
+    if (state.monitoring) {
+      return false
+    }
+    state.monitoring = setInterval(() => {
+      dispatch('processPendingTxs')
+    }, 2000)
+    return true
+  },
+  stopMonitoring ({ state }) {
+    if (!state.monitoring) {
+      return false
+    }
+    clearInterval(state.monitoring)
+    state.monitoring = 0
+    return true
+  },
+  processPendingTxs ({ state, rootState, commit }) {
+    const web3 = rootState.web3
+    state.pendingTxs.forEach((cb, txHash) => {
+      web3.eth.getTransactionReceipt(txHash).then(receipt => {
+        if (!receipt) {
+          return
+        }
+        state.pendingTxs.delete(txHash)
+        if (receipt.status) {
+          commit('afterTxReceipt', receipt)
+        } else {
+          commit('afterTxError', {
+            txHash: receipt.transactionHash,
+            errMsg: 'Transactions fail when executed in EVM'
+          })
+        }
+        if (typeof cb === 'function') {
+          cb(receipt)
+        }
+      })
+    })
+  }
+}
+
 export default {
   namespaced: true,
   state,
   // getters,
-  // actions,
+  actions,
   mutations
 }

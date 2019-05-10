@@ -100,6 +100,7 @@
       "ksPwErr": "KeyStore decrypt failed: ",
       "afterSend": "Transaction has been send, ID:",
       "txError": "Transaction failed, ",
+      "txEVMError": "Transaction execution failed",
       "txSuccess": "Transaction succeed, ID: ",
       "compileError": "Compile failed ",
       "compileSuccess": "Compile succeed"

@@ -173,9 +173,12 @@ export default {
       'afterTxError': 'log/afterTxError'
     }),
     ...mapActions([
-      'pushAccountToWallet',
+      'signTx',
       'notice'
     ]),
+    ...mapActions({
+      addPendingTx: 'log/addPendingTx'
+    }),
     toggleSCMode (mode) {
       this.sourceCode = ''
       this.compiledCode = ''
@@ -315,7 +318,7 @@ export default {
         this.waitToDeploy = true
       })
     },
-    deploy () {
+    async deploy () {
       if (!this.waitToDeploy) {
         return
       }
@@ -335,34 +338,37 @@ export default {
         data: '0x' + this.compiledCode,
         arguments: argus
       }
-      const contractDeploy = newContract.deploy(options)
-      const config = {
+      const contractDeployData = newContract.deploy(options).encodeABI()
+      const tx = {
         nonce: this.deployConfig.nonce,
         from: this.deployConfig.from,
         gas: this.deployConfig.gas,
-        gasPrice: this.deployConfig.gasPrice
+        gasPrice: this.deployConfig.gasPrice,
+        data: contractDeployData
       }
-      try {
-        this.pushAccountToWallet(this.deployConfig.from)
-      } catch (err) {
-        console.error(err)
-        this.notice(['error', this.$t('Common.notice.error') + (err.message || err), 10000])
-        return
-      }
+
+      const rawTx = await this.signTx(tx)
+
       this.waitToDeploy = false
       const from = this.deployConfig.from
       let txHash = ''
-      contractDeploy.send(config)
+      this.web3.eth.sendSignedTransaction(rawTx)
         .on('transactionHash', hash => {
           txHash = hash
           this.afterTxSend({ hash, from })
           this.notice(['log', this.$t('Common.notice.afterSend') + hash, 10000])
-        })
-        .on('receipt', rec => {
-          this.afterTxReceipt(rec)
-          this.notice(['log', this.$t('Common.notice.txSuccess') + rec.transactionHash, 10000])
+          this.addPendingTx([hash, receipt => {
+            if (receipt.status) {
+              this.notice(['log', this.$t('Common.notice.txSuccess') + receipt.transactionHash, 10000])
+            } else {
+              this.notice(['error', this.$t('Common.notice.txEVMError'), 10000])
+            }
+          }])
         })
         .on('error', err => {
+          if (/EVM/.test(err.message)) {
+            return
+          }
           console.error(err)
           let errMsg = (err.message || err).toString()
           errMsg = errMsg.split(':')[0]
