@@ -52,13 +52,11 @@ export default {
       greenbelt
     }
   },
-  mounted () {
-    window.el = this
-  },
   methods: {
-    ...mapActions({
-      useGreenBelt: 'useGreenBelt'
-    }),
+    ...mapActions([
+      'useGreenBelt',
+      'notice'
+    ]),
     jumpToHomepage () {
       this.$router.push(routes[0])
     },
@@ -67,7 +65,7 @@ export default {
       if (provider && provider.isMetaMask) {
         this.useGreenBelt(provider).then(this.jumpToHomepage)
       } else {
-        // TODO: notice
+        this.notice(['error', this.$t('GreenBelt.notfound'), 10000])
       }
     }
   },

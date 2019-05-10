@@ -5,7 +5,7 @@
     "welcome": "欢迎使用Stellar"
   },
   "App": {
-    "back": "返回首页",
+    "back": "退出",
     "close": "关闭",
     "custom": "自定义Provider",
     "account": "没有激活账户 | 已激活{count}个账户  | 已激活{count}个账户",
@@ -121,6 +121,9 @@
     "title": "使用GreenBelt",
     "start": "使用GreenBelt管理账户",
     "download": "从Chrome商店下载插件",
-    "versionNotice": "请使用7.1.4版本以上的GreenBelt"
+    "versionNotice": "请使用7.1.4版本以上的GreenBelt",
+    "linked": "连接至GreenBelt",
+    "account": "使用GreenBelt账户",
+    "notfound": "未能连接至GreenBelt，请确保安装并已经启动"
   }
 }

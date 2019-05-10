@@ -5,7 +5,7 @@
     "welcome": "Welcome to Stellar"
   },
   "App": {
-    "back": "Back to Home",
+    "back": "Exit",
     "close": "Close",
     "custom": "Custom Provider",
     "account": "no Accounts in Session | {count} Account in Session | {count} Accounts in Session",
@@ -121,6 +121,9 @@
     "title": "Use GreenBelt",
     "start": "Use GreenBelt to manage accounts",
     "download": "Download plugins from Chrome Store",
-    "versionNotice": "Please use GreenBelt above v7.1.4"
+    "versionNotice": "Please use GreenBelt above v7.1.4",
+    "linked": "Connect by GreenBelt",
+    "account": "Use the GreenBelt account",
+    "notfound": "Failed to connect to GreenBelt, please ensure installation and start-up"
   }
 }

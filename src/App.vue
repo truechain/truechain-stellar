@@ -25,7 +25,7 @@
         'tc-user-hide': $route.name === null,
         'tc-user-ctrl-open': hoverNav === 2
       }">
-        <div v-if="useGreenBelt" class="tc-user-net">连接至GreenBelt</div>
+        <div v-if="useGreenBelt" class="tc-user-net">{{ $t('GreenBelt.linked') }}</div>
         <div v-else class="tc-user-net"
           :class="{ 'tc-user-net-hover': hoverNav === 1 }"
           :style="{ 'font-size': provider.tag ? '16px' : '14px' }"
@@ -54,7 +54,8 @@
           </div>
         </div>
         <div class="tc-user-info" @mouseover="setHoverObjIndex(2)">
-          {{ $tc('App.account', accountsCount, { count: accountsCount }) }}
+          <span v-if="useGreenBelt">{{ $t('GreenBelt.account') }}</span>
+          <span v-else>{{ $tc('App.account', accountsCount, { count: accountsCount }) }}</span>
         </div>
         <div class="tc-user-ctrl">
           <span @click.stop="goBack">{{ $t('App.back') }}</span>
@@ -181,6 +182,10 @@ export default {
     },
     goBack () {
       this.$router.push('/')
+      setTimeout(() => {
+        // TODO: more elegant
+        location.reload()
+      }, 600)
     },
     onresize () {
       if (!this.$refs.view) {

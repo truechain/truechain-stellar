@@ -61,9 +61,13 @@ const mutations = {
 
 const actions = {
   async useGreenBelt ({ state }, provider) {
-    await provider.enable().then(addrs => {
+    const error = await provider.enable().then(addrs => {
       state.greenbeltAddr = addrs[0]
-    })
+      return false
+    }).catch(() => true)
+    if (error) {
+      return
+    }
     provider.on('accountsChanged' ,addrs => {
       state.greenbeltAddr = addrs[0]
     })
