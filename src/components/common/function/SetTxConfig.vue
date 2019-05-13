@@ -95,7 +95,10 @@ export default {
     }
   },
   created () {
-    this.options.gasPrice = this.gasPrice || '20000000000'
+    this.options.gasPrice = this.gasPrice || '1000000'
+    if (this.useGreenBelt) {
+      this.$emit('selectFrom', this.greenbeltAddr)
+    }
   },
   methods: {
     ...mapMutations([

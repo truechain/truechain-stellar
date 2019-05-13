@@ -44,6 +44,7 @@ export default {
   name: 'Transfer',
   data () {
     return {
+      from: '',
       toAddress: '',
       value: '',
       balanceI: '0',
@@ -56,7 +57,8 @@ export default {
       txConfig: {},
 
       pageTranslateY: 0,
-      height: 0
+      height: 0,
+      updateTimer: 0
     }
   },
   computed: {
@@ -71,6 +73,7 @@ export default {
   mounted () {
     this.height = this.$el.getBoundingClientRect().height
     this.$el.addEventListener('mousewheel', this.onMousewheel)
+    this.updateBalance()
   },
   methods: {
     ...mapMutations({
@@ -91,19 +94,29 @@ export default {
       this.value = value
     },
     getBalance (address) {
-      this.web3.eth.getBalance(address).then(balance => {
-        if (balance.length > 27) {
-          this.balanceI = '> 1 Billion'
-          this.balanceF = ''
-        } else {
-          this.balanceI = Math.floor(balance / 1e18)
-          const bf = balance.padStart(18, '0').substr(-18).split('')
-          for (let i = 0; i < 18; i += 3) {
-            bf[i] = ',' + bf[i]
+      this.from = address
+      this.updateBalance()
+    },
+    updateBalance () {
+      clearTimeout(this.updateTimer)
+      if (this.from) {
+        this.web3.eth.getBalance(this.from).then(balance => {
+          if (balance.length > 27) {
+            this.balanceI = '> 1 Billion'
+            this.balanceF = ''
+          } else {
+            this.balanceI = Math.floor(balance / 1e18)
+            const bf = balance.padStart(18, '0').substr(-18).split('')
+            for (let i = 0; i < 18; i += 3) {
+              bf[i] = ',' + bf[i]
+            }
+            this.balanceF = bf.join('')
           }
-          this.balanceF = bf.join('')
-        }
-      })
+        })
+      }
+      this.updateTimer = setTimeout(() => {
+        this.updateBalance()
+      }, 5000)
     },
     onNext (options) {
       // this.web3.eth.getTransactionCount(options.from, 'pending').then(res => {
@@ -158,6 +171,7 @@ export default {
             } else {
               this.notice(['error', this.$t('Common.notice.txEVMError'), 10000])
             }
+            this.updateBalance()
           }])
         })
         .on('error', err => {
@@ -170,6 +184,9 @@ export default {
           this.notice(['error', this.$t('Common.notice.txError') + errMsg, 10000])
         })
     }
+  },
+  beforeDestroy () {
+    clearTimeout(this.updateTimer)
   },
   components: {
     InputAddress,
