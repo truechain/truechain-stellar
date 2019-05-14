@@ -21,9 +21,9 @@ export default {
   },
   computed: {
     size () {
-      const matching = this.type.match(/bytes([\d]+)/)
+      const matching = this.type.match(/bytes([\d]+)?/)
       if (matching) {
-        return parseInt(matching[1])
+        return parseInt(matching[1]) || Infinity
       } else {
         return 1
       }
