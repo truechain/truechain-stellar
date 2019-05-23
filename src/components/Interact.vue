@@ -14,7 +14,7 @@
         <div class="right-part">
           <p class="title">{{ $t('Interact.address') }}</p>
           <input
-            :class="{'input-active': !haveSelectedContract}"
+            :class="{'input-active': true}"
             :disabled="haveSelectedContract"
             v-model="contract.address"
             @change="estimateGas"

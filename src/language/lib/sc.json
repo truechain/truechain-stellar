@@ -34,7 +34,7 @@
   },
   "Interact": {
     "title": "合约调用",
-    "contract": "选择合约",
+    "contract": "选择标准合约",
     "api": "接口JSON",
     "address": "合约地址",
     "interface": "接口",

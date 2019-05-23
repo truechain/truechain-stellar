@@ -34,7 +34,7 @@
   },
   "Interact": {
     "title": "Interact Contract",
-    "contract": "Contract",
+    "contract": "Standard Contract",
     "api": "Iterface JSON",
     "address": "Address",
     "interface": "Interface",
