@@ -14,7 +14,7 @@
         <div class="right-part">
           <p class="title">{{ $t('Interact.address') }}</p>
           <input
-            :class="{'input-active': true}"
+            :class="{'input-active': !haveSelectedContract}"
             :disabled="haveSelectedContract"
             v-model="contract.address"
             @change="estimateGas"
@@ -29,9 +29,18 @@
           }"
           :disabled="haveSelectedContract"
           @change="checkInterfaceInput"
-          v-model="contract.interface"
+          v-model="contract.abi"
           class="code">
         </textarea>
+        <div class="save-contract">
+          <p class="title new">储存合约信息</p>
+          <div>
+            <div>名称</div>
+            <input v-model="contractName" type="text">
+            <div class="button b-normal" @click="toSaveContract">储存</div>
+            <div class="button b-error" @click="toRemoveContract">删除</div>
+          </div>
+        </div>
       </div>
       <hr>
       <div>
@@ -86,13 +95,8 @@ import { mapState, mapMutations, mapActions } from 'vuex'
 
 import Selector from 'common/function/Selector'
 import SetTxConfig from 'common/function/SetTxConfig'
-import contracts from 'static/contracts.json'
 
 import InterfaceInput from 'common/gui/InterfaceInput'
-
-const contractNames = contracts.map(contract => {
-  return contract.name
-})
 
 function genDefaultInputs (inputs) {
   return inputs.map(input => {
@@ -122,7 +126,7 @@ export default {
         interface: ''
       },
       haveSelectedContract: false,
-      contractNames,
+      contractName: '',
       interfacesList: [],
       interfaceNames: [],
       isErrorInInterfaces: false,
@@ -145,6 +149,15 @@ export default {
       'web3',
       'eth'
     ]),
+    ...mapState({
+      dbState: state => state.indexdb.state,
+      contracts: state => state.indexdb.contracts
+    }),
+    contractNames ()  {
+      return this.contracts.map(contract => {
+        return contract.name
+      })
+    },
     contractNamesDefaultOptions () {
       return [this.$t('Interact.custom')]
     },
@@ -193,20 +206,22 @@ export default {
     }),
     ...mapActions([
       'signTx',
-      'notice'
+      'notice',
+      'updateContract',
+      'removeContract'
     ]),
     ...mapActions({
       addPendingTx: 'log/addPendingTx'
     }),
     updateContractByQuery (query) {
       this.contract.address = ''
-      this.contract.interface = ''
+      this.contract.abi = ''
       this.interfacesList = []
       if (query.hasOwnProperty('ERC20')) {
-        const ERC20Config = contracts.find(c => c.name === 'ERC20') || { interface: [] }
+        const ERC20Config = this.contracts.find(c => c.name === 'ERC20') || { interface: [] }
         const abi = ERC20Config.interface
         this.contract.address = query['ERC20']
-        this.contract.interface = JSON.stringify(abi)
+        this.contract.abi = JSON.stringify(abi)
         this.checkInterfaceInput(undefined, abi)
       }
     },
@@ -214,21 +229,51 @@ export default {
       if (isDefaultOption) {
         this.haveSelectedContract = false
       } else {
-        this.haveSelectedContract = true
-        const contract = contracts.filter(item => {
+        // this.haveSelectedContract = true
+        const contract = this.contracts.filter(item => {
           return item.name === name
         })[0]
         if (contract) {
+          this.contractName = contract.name
           this.contract.address = contract.address
-          this.contract.interface = JSON.stringify(contract.interface)
-          this.checkInterfaceInput(undefined, contract.interface)
+          this.contract.abi = JSON.stringify(contract.abi)
+          this.checkInterfaceInput(undefined, contract.abi)
         }
       }
+    },
+    toSaveContract () {
+      const name = this.contractName
+      const address = this.contract.address
+      const abi = this.interfacesList
+      if (!name || !address || this.isErrorInInterfaces) {
+        return this.notice(['error', '请确保合约地址或接口输入正确，并且输入合约名称', 4000])
+      }
+      this.updateContract({ name, address, abi }).then(res => {
+        if (res) {
+          this.notice(['info', '合约储存成功', 4000])
+        } else {
+          this.notice(['error', '合约储存失败', 4000])
+        }
+      })
+    },
+    toRemoveContract () {
+      const name = this.contractName
+      if (!name) {
+        return this.notice(['error', '请输入将要删除的合约名称', 4000])
+      }
+      this.removeContract(name).then(res => {
+        if (res) {
+          this.contractName = ''
+          this.notice(['info', '合约删除成功', 4000])
+        } else {
+          this.notice(['error', '合约删除失败', 4000])
+        }
+      })
     },
     checkInterfaceInput (_, interfacesJSON) {
       if (!interfacesJSON) {
         try {
-          interfacesJSON = JSON.parse(this.contract.interface)
+          interfacesJSON = JSON.parse(this.contract.abi)
         } catch (err) {
           this.isErrorInInterfaces = true
           this.interfacesList = []
@@ -428,10 +473,33 @@ export default {
   padding 9px
   box-sizing border-box
 
+.save-contract
+  margin-top 15px
+  width 50%
+  >div
+    line-height 40px
+    display flex
+    div
+      flex 0 0 60px
+    .button
+      margin-left 6px
+      flex 0 0 40px
+      text-align center
+      padding 0 6px
+      border-radius 3px
+      color #fff
+      opacity .6
+      cursor pointer
+      transition opacity .4s
+      &:hover
+        opacity 1
+
 @media screen and (max-width: 960px)
   .left-part
     width 100%
     padding-right 0
   .right-part
+    width 100%
+  .save-contract
     width 100%
 </style>

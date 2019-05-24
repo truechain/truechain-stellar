@@ -1,24 +1,30 @@
+import staticContracts from 'static/contracts.json'
+
 const DB_NAME = 'stellar'
 const DB_VERSION = 1
 
 // state
 const state = {
   dbversion: DB_VERSION,
-  db: null
+  db: null,
+  contracts: [],
+  state: false
 }
 
 // actions
 const actions = {
-  async initDB ({ state }) {
+  async initDB ({ state, dispatch }) {
+    let upgradeneeded = false
     state.db = await new Promise(resolve => {
       const openRequest = indexedDB.open(DB_NAME, DB_VERSION)
       openRequest.onupgradeneeded = event => {
         const db = event.target.result
-        db.createObjectStore('contract', { autoIncrement: true })
-          .createIndex('name', 'name', { unique: true })
+        db.createObjectStore('contract', { keyPath: 'name' })
+        upgradeneeded = true
       }
       openRequest.onsuccess = () => {
-        console.log('use IndexDB', openRequest.result.name, 'version', openRequest.result.version)
+        console.log('Use IndexDB:', openRequest.result.name, 'version:', openRequest.result.version)
+        state.state = true
         resolve(openRequest.result)
       }
       openRequest.onerror = () => {
@@ -26,16 +32,22 @@ const actions = {
         resolve(null)
       }
     })
+    if (upgradeneeded) {
+      await staticContracts.map(contract => {
+        return dispatch('saveContract', contract)
+      })
+    }
+    await dispatch('updateAllContracts')
   },
-  async saveContract ({ state }, { name, address, abi }) {
+  async saveContract ({ state, dispatch }, { name, address, abi }) {
     const db = state.db
     if (!db || !(db instanceof IDBDatabase)) {
       return false
     }
-    return new Promise(resolve => {
+    const res = new Promise(resolve => {
       const saveRequest = db.transaction(['contract'], 'readwrite')
         .objectStore('contract')
-        .add({ id: 1, name, address, abi })
+        .add({ name, address, abi })
       saveRequest.onsuccess = () => {
         resolve(true)
       }
@@ -43,16 +55,20 @@ const actions = {
         resolve(false)
       }
     })
+    if (res) {
+      await dispatch('updateAllContracts')
+    }
+    return res
   },
-  async removeContract ({ state }, id) {
+  async updateContract ({ state, dispatch }, { name, address, abi }) {
     const db = state.db
     if (!db || !(db instanceof IDBDatabase)) {
       return false
     }
-    return new Promise(resolve => {
+    const res = new Promise(resolve => {
       const delRequest = db.transaction(['contract'], 'readwrite')
         .objectStore('contract')
-        .delete(id)
+        .put({ name, address, abi })
       delRequest.onsuccess = () => {
         resolve(true)
       }
@@ -60,8 +76,33 @@ const actions = {
         resolve(false)
       }
     })
+    if (res) {
+      await dispatch('updateAllContracts')
+    }
+    return res
   },
-  async getAllContracts ({ state }) {
+  async removeContract ({ state, dispatch }, name) {
+    const db = state.db
+    if (!db || !(db instanceof IDBDatabase)) {
+      return false
+    }
+    const res = new Promise(resolve => {
+      const delRequest = db.transaction(['contract'], 'readwrite')
+        .objectStore('contract')
+        .delete(name)
+      delRequest.onsuccess = () => {
+        resolve(true)
+      }
+      delRequest.onerror = () => {
+        resolve(false)
+      }
+    })
+    if (res) {
+      await dispatch('updateAllContracts')
+    }
+    return res
+  },
+  async updateAllContracts ({ state }) {
     const db = state.db
     if (!db || !(db instanceof IDBDatabase)) {
       return false
@@ -71,6 +112,7 @@ const actions = {
         .objectStore('contract')
         .getAll()
       getRequest.onsuccess = event => {
+        state.contracts = event.target.result
         resolve(event.target.result)
       }
       getRequest.onerror = () => {

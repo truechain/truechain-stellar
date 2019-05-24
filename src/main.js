@@ -19,6 +19,7 @@ new Vue({
   },
   created () {
     this.initI18n(i18n)
+    this.$store.dispatch('initDB')
   },
   render: h => h(App)
 }).$mount('#app')
