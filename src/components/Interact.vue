@@ -245,7 +245,7 @@ export default {
       const name = this.contractName
       const address = this.contract.address
       const abi = this.interfacesList
-      if (!name || !address || this.isErrorInInterfaces) {
+      if (!name || (!address && !this.contract.abi) || this.isErrorInInterfaces) {
         return this.notice(['error', '请确保合约地址或接口输入正确，并且输入合约名称', 4000])
       }
       this.updateContract({ name, address, abi }).then(res => {
