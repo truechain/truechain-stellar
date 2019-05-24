@@ -33,12 +33,12 @@
           class="code">
         </textarea>
         <div class="save-contract">
-          <p class="title new">储存合约信息</p>
+          <p class="title new">{{ $t('Interact.saveContract') }}</p>
           <div>
-            <div>名称</div>
+            <div>{{ $t('Interact.name') }}</div>
             <input v-model="contractName" type="text">
-            <div class="button b-normal" @click="toSaveContract">储存</div>
-            <div class="button b-error" @click="toRemoveContract">删除</div>
+            <div class="button b-normal" @click="toSaveContract">{{ $t('Interact.save') }}</div>
+            <div class="button b-error" @click="toRemoveContract">{{ $t('Interact.delete') }}</div>
           </div>
         </div>
       </div>
@@ -246,27 +246,27 @@ export default {
       const address = this.contract.address
       const abi = this.interfacesList
       if (!name || (!address && !this.contract.abi) || this.isErrorInInterfaces) {
-        return this.notice(['error', '请确保合约地址或接口输入正确，并且输入合约名称', 4000])
+        return this.notice(['error', this.$t('Interact.notice.save'), 6000])
       }
       this.updateContract({ name, address, abi }).then(res => {
         if (res) {
-          this.notice(['info', '合约储存成功', 4000])
+          this.notice(['info', this.$t('Interact.notice.saveSuccess'), 4000])
         } else {
-          this.notice(['error', '合约储存失败', 4000])
+          this.notice(['error', this.$t('Interact.notice.saveFail'), 4000])
         }
       })
     },
     toRemoveContract () {
       const name = this.contractName
       if (!name) {
-        return this.notice(['error', '请输入将要删除的合约名称', 4000])
+        return this.notice(['error', this.$t('Interact.notice.delete'), 6000])
       }
       this.removeContract(name).then(res => {
         if (res) {
           this.contractName = ''
-          this.notice(['info', '合约删除成功', 4000])
+          this.notice(['info', this.$t('Interact.notice.deleteSuccess'), 4000])
         } else {
-          this.notice(['error', '合约删除失败', 4000])
+          this.notice(['error', this.$t('Interact.notice.deleteFail'), 4000])
         }
       })
     },

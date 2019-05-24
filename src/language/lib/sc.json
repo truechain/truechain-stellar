@@ -38,7 +38,19 @@
     "api": "接口JSON",
     "address": "合约地址",
     "interface": "接口",
-    "custom": "自定义"
+    "custom": "自定义",
+    "saveContract": "储存合约信息",
+    "name": "名称",
+    "save": "储存",
+    "delete": "删除",
+    "notice": {
+      "save": "请确保合约地址或接口输入正确，并且输入合约名称",
+      "saveSuccess": "合约储存成功",
+      "saveFail": "合约储存失败",
+      "delete": "请输入将要删除的合约名称",
+      "deleteSuccess": "合约删除成功",
+      "deleteFail": "合约删除失败"
+    }
   },
   "Deploy": {
     "title": "部署合约",

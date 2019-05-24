@@ -38,7 +38,19 @@
     "api": "Iterface JSON",
     "address": "Address",
     "interface": "Interface",
-    "custom": "Custom"
+    "custom": "Custom",
+    "saveContract": "Save Contract Info",
+    "name": "Name",
+    "save": "save",
+    "delete": "delete",
+    "notice": {
+      "save": "Please make sure the contract address or interface is entered correctly and enter the contract name",
+      "saveSuccess": "Contract storage successful",
+      "saveFail": "Contract storage failed",
+      "delete": "Please enter the name of the contract that will be deleted",
+      "deleteSuccess": "Contract deletion successful",
+      "deleteFail": "Contract deletion failed"
+    }
   },
   "Deploy": {
     "title": "Deploy Contract",
