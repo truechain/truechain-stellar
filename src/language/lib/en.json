@@ -73,7 +73,7 @@
   },
   "SigninAccount": {
     "title": "Add Account",
-    "privateKey": "from Private Key",
+    "privateKey": "Private Key",
     "select": "or Select KeyStore flie"
   },
   "Selector": {
