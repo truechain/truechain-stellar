@@ -2,7 +2,7 @@
   {
     "name": "True",
     "tag": "main",
-    "provider": "https://api.truescan.net/rpc/",
+    "provider": "https://rpc.truewallet.net/",
     "type": "etrue"
   },
   {
@@ -20,7 +20,7 @@
   {
     "name": "ETH",
     "tag": "mainnet",
-    "provider": "https://mainnet.infura.io/",
+    "provider": "https://ethrpc.truewallet.net/",
     "type": "eth"
   },
   {
