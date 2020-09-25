@@ -2,7 +2,7 @@
   {
     "name": "True",
     "tag": "main",
-    "provider": "https://rpc.truewallet.net/",
+    "provider": "https://rpc.truechain.network/",
     "type": "etrue"
   },
   {
