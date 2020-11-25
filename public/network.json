@@ -8,7 +8,7 @@
   {
     "name": "True test",
     "tag": "test",
-    "provider": "https://rpc.truescan.net/testnet/",
+    "provider": "https://rpc.truescan.network/testnet/",
     "type": "etrue"
   },
   {
@@ -20,7 +20,7 @@
   {
     "name": "ETH",
     "tag": "mainnet",
-    "provider": "https://ethrpc.truewallet.net/",
+    "provider": "https://ethrpc.truescan.network/",
     "type": "eth"
   },
   {
