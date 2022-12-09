@@ -17,7 +17,7 @@
     "core-js": "^2.6.5",
     "cors": "^2.8.5",
     "ethereumjs-tx": "^1.3.4",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "iclipboard": "^1.0.1",
     "owasp-password-strength-test": "^1.3.0",
     "solc": "^0.5.7",
